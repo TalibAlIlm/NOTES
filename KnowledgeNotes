@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talib al-ʿIlm — Notizen</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+
+/* ═══════════════════════════════════════════════════
+   CSS VARIABLEN
+═══════════════════════════════════════════════════ */
+:root {
+  /* Sidebar — tiefes Tintenschwarz */
+  --sb-bg:        #0E0C09;
+  --sb-surface:   #17140F;
+  --sb-raised:    #1E1A14;
+  --sb-border:    #2A2519;
+  --sb-text:      #C4BAA8;
+  --sb-muted:     #635A4C;
+  --sb-gold:      #C9A85C;
+  --sb-gold-glow: rgba(201,168,92,0.10);
+
+  /* Dokument — warmes Pergament */
+  --doc-bg:       #FEFCF8;
+  --doc-ink:      #1A1710;
+  --doc-soft:     #5A4E3C;
+  --doc-rule:     #C8BAA0;
+  --doc-accent:   #7A5C2E;
+
+  /* Notiztypen */
+  --ayah-bg:      #FFFBEA;
+  --ayah-bar:     #D4A017;
+  --ayah-tint:    #8B6800;
+
+  --hadith-bg:    #F0F9F3;
+  --hadith-bar:   #3AA86A;
+  --hadith-tint:  #1C6B40;
+
+  --athaar-bg:    #EDF3FC;
+  --athaar-bar:   #4A7EC8;
+  --athaar-tint:  #1A4F9A;
+
+  /* Layout */
+  --sw: 268px;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET & BASIS
+═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Lato', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background: #080705;
+  color: var(--sb-text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════
+   HAUPT-LAYOUT
+═══════════════════════════════════════════════════ */
+.shell {
+  display: flex;
+  height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════ */
+.sidebar {
+  width: var(--sw);
+  min-width: var(--sw);
+  height: 100vh;
+  background: var(--sb-bg);
+  border-right: 1px solid var(--sb-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-border) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--sb-border); }
+
+/* Sidebar: Kopfzeile */
+.sb-head {
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid var(--sb-border);
+  flex-shrink: 0;
+}
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+.sb-logo-hex {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+.sb-logo-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--sb-gold);
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.sb-tagline {
+  font-size: 9.5px;
+  color: var(--sb-muted);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding-left: 36px;
+}
+
+/* Sidebar: Sektionen */
+.sb-sec {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--sb-border);
+  flex-shrink: 0;
+}
+.sb-sec-ttl {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sb-muted);
+  margin-bottom: 10px;
+}
+
+/* Eingabefelder */
+.sb-field { margin-bottom: 8px; }
+.sb-field:last-child { margin-bottom: 0; }
+.sb-field label {
+  display: block;
+  font-size: 9.5px;
+  color: var(--sb-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.sb-field input {
+  width: 100%;
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  border-radius: 3px;
+  padding: 6px 9px;
+  color: var(--sb-text);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.sb-field input:focus {
+  border-color: rgba(201,168,92,0.45);
+  box-shadow: 0 0 0 2px rgba(201,168,92,0.07);
+}
+.sb-field input::placeholder { color: var(--sb-muted); opacity: 0.55; }
+
+/* Legende */
+.legend { display: flex; flex-direction: column; gap: 5px; }
+
+.leg {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 8px;
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.leg:hover { background: var(--sb-raised); border-color: rgba(201,168,92,0.35); }
+.leg.active {
+  border-color: var(--sb-gold);
+  background: var(--sb-gold-glow);
+}
+.leg-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.leg-body { flex: 1; min-width: 0; }
+.leg-name { font-size: 11.5px; color: var(--sb-text); }
+.leg-sub  { font-size: 9.5px; color: var(--sb-muted); margin-top: 1px; }
+.leg-key {
+  font-size: 9.5px;
+  color: var(--sb-muted);
+  background: #1A1710;
+  border: 1px solid var(--sb-border);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Status-Indikator aktueller Block */
+.cur-type {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 8px;
+  border-radius: 3px;
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  font-size: 11px;
+}
+.cur-type-dot {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: var(--sb-border);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.cur-type-lbl { color: var(--sb-muted); }
+.cur-type-val { color: var(--sb-text); font-weight: 400; }
+
+/* Buttons */
+.sb-btns { display: flex; flex-direction: column; gap: 6px; }
+
+.sb-btn {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--sb-border);
+  border-radius: 3px;
+  background: var(--sb-surface);
+  color: var(--sb-text);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.sb-btn:hover {
+  background: var(--sb-raised);
+  border-color: rgba(201,168,92,0.35);
+  color: var(--sb-gold);
+}
+.sb-btn--primary {
+  background: var(--sb-gold);
+  border-color: var(--sb-gold);
+  color: #0E0C09;
+  font-weight: 700;
+}
+.sb-btn--primary:hover {
+  background: #D9B96A;
+  border-color: #D9B96A;
+  color: #0E0C09;
+}
+.sb-btn-ico { font-size: 13px; line-height: 1; }
+
+/* Tastenkürzel */
+.scuts { display: flex; flex-direction: column; gap: 5px; }
+.scut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+}
+.scut-lbl { color: var(--sb-muted); }
+.scut-key {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 9.5px;
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  color: var(--sb-text);
+  padding: 1.5px 5px;
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════
+   VORSCHAU-BEREICH
+═══════════════════════════════════════════════════ */
+.preview {
+  flex: 1;
+  overflow-y: auto;
+  background: #1A1712;
+  display: flex;
+  justify-content: center;
+  padding: 32px 28px 64px;
+  scrollbar-width: thin;
+  scrollbar-color: #332E25 transparent;
+}
+.preview::-webkit-scrollbar { width: 6px; }
+.preview::-webkit-scrollbar-thumb {
+  background: #332E25;
+  border-radius: 3px;
+}
+.preview::-webkit-scrollbar-thumb:hover { background: #44403A; }
+
+/* ═══════════════════════════════════════════════════
+   A4 DOKUMENT
+═══════════════════════════════════════════════════ */
+.a4 {
+  width: 794px;
+  min-height: 1122px;
+  background: var(--doc-bg);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 52px 64px 48px;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.2),
+    0 6px 24px rgba(0,0,0,0.45),
+    0 20px 56px rgba(0,0,0,0.35);
+  position: relative;
+}
+
+/* ─── DOKUMENT-KOPF ─────────────────────────── */
+.doc-head {
+  text-align: center;
+  margin-bottom: 26px;
+  flex-shrink: 0;
+}
+
+.doc-orn-top {
+  display: block;
+  width: 320px;
+  height: 26px;
+  margin: 0 auto 18px;
+}
+
+input.doc-title {
+  display: block;
+  width: 100%;
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 27px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--doc-ink);
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid transparent;
+  outline: none;
+  padding: 2px 8px;
+  letter-spacing: 0.01em;
+  transition: border-color 0.2s;
+}
+input.doc-title:hover,
+input.doc-title:focus { border-bottom-color: rgba(200,186,160,0.55); }
+
+.doc-meta-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+input.doc-meta {
+  font-family: 'Lato', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--doc-soft);
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  outline: none;
+  padding: 1px 6px;
+  min-width: 90px;
+  transition: border-color 0.2s;
+}
+input.doc-meta:hover,
+input.doc-meta:focus { border-bottom-color: rgba(200,186,160,0.45); }
+input.doc-meta::placeholder { color: var(--doc-rule); }
+
+.doc-sep {
+  color: var(--doc-rule);
+  font-size: 13px;
+  line-height: 1.6;
+  pointer-events: none;
+  user-select: none;
+}
+
+.doc-rule-svg {
+  display: block;
+  width: 100%;
+  height: 16px;
+  margin-top: 18px;
+}
+
+/* ─── DOKUMENT-KÖRPER ───────────────────────── */
+.doc-body {
+  flex: 1;
+  padding-top: 4px;
+}
+
+/* ─── NOTIZ-BLÖCKE ──────────────────────────── */
+.block {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 4px;
+  border-radius: 2px;
+  transition: background-color 0.14s ease;
+}
+
+.block-bar {
+  width: 3px;
+  flex-shrink: 0;
+  border-radius: 2px 0 0 2px;
+  background: transparent;
+  transition: background-color 0.14s ease;
+}
+
+.block-text {
+  flex: 1;
+  min-height: 38px;
+  padding: 8px 42px 8px 11px;
+  font-family: 'Lato', 'Segoe UI', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--doc-ink);
+  outline: none;
+  word-break: break-word;
+  white-space: pre-wrap;
+  cursor: text;
+}
+
+[contenteditable][data-ph]:empty::before {
+  content: attr(data-ph);
+  color: rgba(90,78,60,0.28);
+  pointer-events: none;
+  font-style: italic;
+}
+
+/* Fokus-Rahmen */
+.block.is-focused {
+  outline: 1px solid rgba(122,92,46,0.16);
+  outline-offset: 0px;
+  border-radius: 2px;
+}
+
+/* Block-Typen */
+.block[data-type="ayah"]   { background-color: var(--ayah-bg); }
+.block[data-type="ayah"]   .block-bar { background: var(--ayah-bar); }
+.block[data-type="hadith"] { background-color: var(--hadith-bg); }
+.block[data-type="hadith"] .block-bar { background: var(--hadith-bar); }
+.block[data-type="athaar"] { background-color: var(--athaar-bg); }
+.block[data-type="athaar"] .block-bar { background: var(--athaar-bar); }
+.block[data-type="normal"] { background-color: transparent; }
+
+/* Werkzeug-Buttons (erscheinen bei Hover) */
+.block-tools {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  gap: 2px;
+  z-index: 10;
+}
+.block:hover .block-tools { display: flex; }
+
+.bt {
+  width: 19px;
+  height: 19px;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid #D5C9B5;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 9px;
+  color: var(--doc-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: color 0.12s, border-color 0.12s;
+  backdrop-filter: blur(4px);
+}
+.bt:hover { color: var(--doc-accent); border-color: var(--doc-accent); }
+
+/* ─── DOKUMENT-FUSSZEILE ────────────────────── */
+.doc-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 11px;
+  border-top: 1px solid var(--doc-rule);
+  flex-shrink: 0;
+}
+.foot-txt {
+  font-family: 'Lato', Arial, sans-serif;
+  font-size: 9.5px;
+  color: var(--doc-rule);
+  letter-spacing: 0.07em;
+}
+.foot-orn { width: 50px; height: 11px; }
+
+/* ═══════════════════════════════════════════════════
+   TOAST-MELDUNG
+═══════════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--sb-raised);
+  border: 1px solid var(--sb-border);
+  border-left: 2px solid var(--sb-gold);
+  color: var(--sb-text);
+  font-size: 11.5px;
+  padding: 8px 14px;
+  border-radius: 3px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.18s, transform 0.18s;
+  pointer-events: none;
+  z-index: 9999;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ═══════════════════════════════════════════════════
+   DRUCK-OPTIMIERUNG
+═══════════════════════════════════════════════════ */
+@media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 20mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    overflow: visible !important;
+    background: white !important;
+    height: auto !important;
+  }
+
+  /* Alles ausblenden außer Dokument */
+  .sidebar,
+  .toast,
+  .block-tools {
+    display: none !important;
+  }
+
+  .shell { display: block !important; height: auto !important; }
+
+  .preview {
+    display: block !important;
+    padding: 0 !important;
+    background: white !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .a4 {
+    width: 100% !important;
+    min-height: unset !important;
+    height: auto !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  /* Kein Block soll mitten im Satz umgebrochen werden */
+  .block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Farbige Hintergründe im Druck erhalten */
+  .block[data-type="ayah"]   { background-color: var(--ayah-bg)   !important; }
+  .block[data-type="hadith"] { background-color: var(--hadith-bg) !important; }
+  .block[data-type="athaar"] { background-color: var(--athaar-bg) !important; }
+
+  .block[data-type="ayah"]   .block-bar { background: var(--ayah-bar)   !important; }
+  .block[data-type="hadith"] .block-bar { background: var(--hadith-bar) !important; }
+  .block[data-type="athaar"] .block-bar { background: var(--athaar-bar) !important; }
+
+  /* Eingabefelder: Rahmen entfernen, aber Wert bleibt lesbar */
+  input.doc-title,
+  input.doc-meta {
+    border-color: transparent !important;
+  }
+
+  /* Kein Fokus-Rahmen im Druck */
+  .block.is-focused { outline: none !important; }
+
+  /* Leere Platzhalter im Druck ausblenden */
+  [contenteditable][data-ph]:empty::before { content: '' !important; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sb-head">
+      <div class="sb-logo">
+        <!-- Geometrisches Hexagon-Icon -->
+        <svg class="sb-logo-hex" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="13,1.5 23.5,7.25 23.5,18.75 13,24.5 2.5,18.75 2.5,7.25"
+                   fill="none" stroke="#C9A85C" stroke-width="1"/>
+          <polygon points="13,6 19.5,9.75 19.5,17.25 13,21 6.5,17.25 6.5,9.75"
+                   fill="none" stroke="#C9A85C" stroke-width="0.6" opacity="0.45"/>
+          <circle cx="13" cy="13" r="2.5" fill="#C9A85C" opacity="0.55"/>
+        </svg>
+        <span class="sb-logo-name">Talib al-ʿIlm</span>
+      </div>
+      <div class="sb-tagline">Islamische Studierende Notizen</div>
+    </div>
+
+    <!-- Dokument-Infos -->
+    <div class="sb-sec">
+      <div class="sb-sec-ttl">Dokument</div>
+      <div class="sb-field">
+        <label for="in-title">Buchtitel</label>
+        <input id="in-title" type="text" value="Kitāb at-Tawḥīd" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="sb-field">
+        <label for="in-author">Autor</label>
+        <input id="in-author" type="text" placeholder="z.B. Ibn ʿAbd al-Wahhāb" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="sb-field">
+        <label for="in-chapter">Kapitel / Abschnitt</label>
+        <input id="in-chapter" type="text" placeholder="z.B. Kapitel 1" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+
+    <!-- Legende & Notiztypen -->
+    <div class="sb-sec">
+      <div class="sb-sec-ttl">Notiztypen — Block anklicken, dann wählen</div>
+      <div class="legend" id="legend">
+
+        <div class="leg" data-type="ayah" title="Blocktyp: Āyah (Alt+1)">
+          <div class="leg-dot" style="background:#D4A017;"></div>
+          <div class="leg-body">
+            <div class="leg-name">Āyah</div>
+            <div class="leg-sub">Koranvers</div>
+          </div>
+          <div class="leg-key">Alt+1</div>
+        </div>
+
+        <div class="leg" data-type="hadith" title="Blocktyp: Hadīth (Alt+2)">
+          <div class="leg-dot" style="background:#3AA86A;"></div>
+          <div class="leg-body">
+            <div class="leg-name">Hadīth</div>
+            <div class="leg-sub">Überlieferung</div>
+          </div>
+          <div class="leg-key">Alt+2</div>
+        </div>
+
+        <div class="leg" data-type="athaar" title="Blocktyp: Athar (Alt+3)">
+          <div class="leg-dot" style="background:#4A7EC8;"></div>
+          <div class="leg-body">
+            <div class="leg-name">Athar / Sharḥ</div>
+            <div class="leg-sub">Gelehrtenaussage</div>
+          </div>
+          <div class="leg-key">Alt+3</div>
+        </div>
+
+        <div class="leg" data-type="normal" title="Blocktyp: Notiz (Alt+0)">
+          <div class="leg-dot" style="background:#3A3530; border:1px solid #504840;"></div>
+          <div class="leg-body">
+            <div class="leg-name">Notiz</div>
+            <div class="leg-sub">Eigene Erläuterung</div>
+          </div>
+          <div class="leg-key">Alt+0</div>
+        </div>
+
+      </div>
+
+      <!-- Aktueller Block-Typ-Anzeige -->
+      <div class="cur-type" id="cur-type" style="margin-top:10px;">
+        <div class="cur-type-dot" id="cur-dot"></div>
+        <span class="cur-type-lbl">Aktiver Block:&nbsp;</span>
+        <span class="cur-type-val" id="cur-val">—</span>
+      </div>
+    </div>
+
+    <!-- Aktionen -->
+    <div class="sb-sec">
+      <div class="sb-sec-ttl">Aktionen</div>
+      <div class="sb-btns">
+        <button class="sb-btn" id="btn-add" title="Neuen Block am Ende einfügen">
+          <span class="sb-btn-ico">＋</span>
+          Block hinzufügen
+        </button>
+        <button class="sb-btn sb-btn--primary" id="btn-print" title="Strg+P">
+          <span class="sb-btn-ico">⎙</span>
+          Drucken / Als PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Tastenkürzel -->
+    <div class="sb-sec">
+      <div class="sb-sec-ttl">Tastenkürzel</div>
+      <div class="scuts">
+        <div class="scut"><span class="scut-lbl">Neuer Block</span>       <span class="scut-key">Enter</span></div>
+        <div class="scut"><span class="scut-lbl">Block löschen (leer)</span><span class="scut-key">Backspace</span></div>
+        <div class="scut"><span class="scut-lbl">Block verschieben</span>  <span class="scut-key">Shift + ↑↓</span></div>
+        <div class="scut"><span class="scut-lbl">→ Āyah</span>             <span class="scut-key">Alt + 1</span></div>
+        <div class="scut"><span class="scut-lbl">→ Hadīth</span>           <span class="scut-key">Alt + 2</span></div>
+        <div class="scut"><span class="scut-lbl">→ Athar</span>            <span class="scut-key">Alt + 3</span></div>
+        <div class="scut"><span class="scut-lbl">→ Notiz</span>            <span class="scut-key">Alt + 0</span></div>
+        <div class="scut"><span class="scut-lbl">Drucken / PDF</span>      <span class="scut-key">Strg + P</span></div>
+      </div>
+    </div>
+
+    <!-- Hinweis -->
+    <div class="sb-sec" style="border-bottom:none;">
+      <div style="font-size:10px; color:var(--sb-muted); line-height:1.6;">
+        Shift+Enter fügt einen Zeilenumbruch innerhalb eines Blocks ein. Enter erstellt einen neuen Block.
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       VORSCHAU / A4
+  ═══════════════════════════════════════ -->
+  <main class="preview" id="preview">
+    <div class="a4" id="a4">
+
+      <!-- Dokument-Kopf -->
+      <header class="doc-head" id="doc-head">
+
+        <!-- Oberes Ornament: Geometrische Rauten-Kette -->
+        <svg class="doc-orn-top" viewBox="0 0 320 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Linke Linie -->
+          <line x1="0" y1="13" x2="108" y2="13" stroke="#C8BAA0" stroke-width="0.55"/>
+          <!-- Kleine linke Raute -->
+          <polygon points="120,6 127,13 120,20 113,13"
+                   fill="none" stroke="#C8BAA0" stroke-width="0.7" opacity="0.65"/>
+          <!-- Mittlere große Raute (gefüllt) -->
+          <polygon points="160,1 173,13 160,25 147,13"
+                   fill="rgba(200,186,160,0.12)" stroke="#C8BAA0" stroke-width="0.9"/>
+          <!-- Kleine rechte Raute -->
+          <polygon points="200,6 207,13 200,20 193,13"
+                   fill="none" stroke="#C8BAA0" stroke-width="0.7" opacity="0.65"/>
+          <!-- Rechte Linie -->
+          <line x1="212" y1="13" x2="320" y2="13" stroke="#C8BAA0" stroke-width="0.55"/>
+        </svg>
+
+        <!-- Buchtitel -->
+        <input class="doc-title" id="doc-title" type="text" value="Kitāb at-Tawḥīd"
+               spellcheck="false" autocomplete="off"
+               aria-label="Buchtitel">
+
+        <!-- Autor + Kapitel -->
+        <div class="doc-meta-row">
+          <input class="doc-meta" id="doc-author" type="text"
+                 placeholder="Autor" spellcheck="false" autocomplete="off"
+                 aria-label="Autor">
+          <span class="doc-sep">·</span>
+          <input class="doc-meta" id="doc-chapter" type="text"
+                 placeholder="Kapitel" spellcheck="false" autocomplete="off"
+                 aria-label="Kapitel">
+        </div>
+
+        <!-- Dekorativer Trennstrich -->
+        <svg class="doc-rule-svg" viewBox="0 0 666 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="8" x2="308" y2="8" stroke="#C8BAA0" stroke-width="0.5"/>
+          <!-- Drei Rauten, zentriert -->
+          <polygon points="317,3 322,8 317,13 312,8"
+                   fill="none" stroke="#C8BAA0" stroke-width="0.6" opacity="0.7"/>
+          <polygon points="333,3 338,8 333,13 328,8"
+                   fill="rgba(200,186,160,0.18)" stroke="#C8BAA0" stroke-width="0.65"/>
+          <polygon points="349,3 354,8 349,13 344,8"
+                   fill="none" stroke="#C8BAA0" stroke-width="0.6" opacity="0.7"/>
+          <line x1="358" y1="8" x2="666" y2="8" stroke="#C8BAA0" stroke-width="0.5"/>
+        </svg>
+
+      </header>
+
+      <!-- Dokument-Körper: Blöcke werden hier eingefügt -->
+      <div class="doc-body" id="doc-body"></div>
+
+      <!-- Dokument-Fußzeile -->
+      <footer class="doc-foot">
+        <span class="foot-txt" id="foot-title">Kitāb at-Tawḥīd</span>
+
+        <!-- Kleines Ornament Mitte -->
+        <svg class="foot-orn" viewBox="0 0 50 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="5.5" x2="18" y2="5.5" stroke="#C8BAA0" stroke-width="0.5"/>
+          <polygon points="25,0.5 31,5.5 25,10.5 19,5.5"
+                   fill="rgba(200,186,160,0.12)" stroke="#C8BAA0" stroke-width="0.6"/>
+          <line x1="32" y1="5.5" x2="50" y2="5.5" stroke="#C8BAA0" stroke-width="0.5"/>
+        </svg>
+
+        <span class="foot-txt" id="foot-page">Seite 1</span>
+      </footer>
+
+    </div><!-- .a4 -->
+  </main>
+
+</div><!-- .shell -->
+
+<!-- Toast-Meldung -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─────────────────────────────────────────────
+   KONFIGURATION
+───────────────────────────────────────────── */
+const TYPES = {
+  ayah:   {
+    label:    'Āyah',
+    badge:    'Āyah',
+    ph:       'Koranvers eingeben …',
+    dotColor: '#D4A017',
+  },
+  hadith: {
+    label:    'Hadīth',
+    badge:    'Hadīth',
+    ph:       'Hadith eingeben …',
+    dotColor: '#3AA86A',
+  },
+  athaar: {
+    label:    'Athar / Sharḥ',
+    badge:    'Athar',
+    ph:       'Gelehrtenaussage / Kommentar …',
+    dotColor: '#4A7EC8',
+  },
+  normal: {
+    label:    'Notiz',
+    badge:    '',
+    ph:       'Eigene Notiz, Erläuterung, Zusammenfassung …',
+    dotColor: '#3A3530',
+  },
+};
+
+/* ─────────────────────────────────────────────
+   ZUSTAND
+───────────────────────────────────────────── */
+let focused  = null;  // aktuell fokussierter .block DOM-Knoten
+let blockSeq = 0;
+
+/* ─────────────────────────────────────────────
+   DOM-REFERENZEN
+───────────────────────────────────────────── */
+const docBody   = document.getElementById('doc-body');
+const inTitle   = document.getElementById('in-title');
+const inAuthor  = document.getElementById('in-author');
+const inChapter = document.getElementById('in-chapter');
+const docTitle  = document.getElementById('doc-title');
+const docAuthor = document.getElementById('doc-author');
+const docChap   = document.getElementById('doc-chapter');
+const footTitle = document.getElementById('foot-title');
+const toastEl   = document.getElementById('toast');
+const curDot    = document.getElementById('cur-dot');
+const curVal    = document.getElementById('cur-val');
+
+/* ─────────────────────────────────────────────
+   SIDEBAR ↔ DOKUMENT SYNCHRONISIERUNG
+───────────────────────────────────────────── */
+function syncToDoc() {
+  docTitle.value  = inTitle.value;
+  docAuthor.value = inAuthor.value;
+  docChap.value   = inChapter.value;
+  footTitle.textContent = inTitle.value || 'Talib al-ʿIlm';
+}
+
+inTitle.addEventListener('input',   syncToDoc);
+inAuthor.addEventListener('input',  syncToDoc);
+inChapter.addEventListener('input', syncToDoc);
+
+// Umgekehrt: Dokument → Sidebar
+docTitle.addEventListener('input', () => {
+  inTitle.value = docTitle.value;
+  footTitle.textContent = docTitle.value || 'Talib al-ʿIlm';
+});
+docAuthor.addEventListener('input', () => {
+  inAuthor.value = docAuthor.value;
+});
+docChap.addEventListener('input', () => {
+  inChapter.value = docChap.value;
+});
+
+/* ─────────────────────────────────────────────
+   AKTUELLER TYP IN SIDEBAR ANZEIGEN
+───────────────────────────────────────────── */
+function updateStatusIndicator(type) {
+  const cfg = TYPES[type] || TYPES.normal;
+  curVal.textContent  = cfg.label;
+  curDot.style.background = cfg.dotColor;
+}
+
+function clearStatusIndicator() {
+  curVal.textContent = '—';
+  curDot.style.background = 'var(--sb-border)';
+}
+
+/* ─────────────────────────────────────────────
+   LEGENDE: AKTIVER ZUSTAND
+───────────────────────────────────────────── */
+function updateLegendActive(type) {
+  document.querySelectorAll('.leg').forEach(l => {
+    l.classList.toggle('active', l.dataset.type === type);
+  });
+}
+
+/* ─────────────────────────────────────────────
+   BLOCK ERSTELLEN
+───────────────────────────────────────────── */
+function mkBlock(type, text) {
+  type = type || 'normal';
+  blockSeq++;
+
+  const wrap = document.createElement('div');
+  wrap.className  = 'block';
+  wrap.dataset.type = type;
+  wrap.dataset.bid  = blockSeq;
+
+  // Farbiger Balken links
+  const bar = document.createElement('div');
+  bar.className = 'block-bar';
+
+  // Bearbeitbarer Text-Bereich
+  const editor = document.createElement('div');
+  editor.className       = 'block-text';
+  editor.contentEditable = 'true';
+  editor.dir             = 'auto';        // Automatische LTR/RTL-Erkennung
+  editor.spellcheck      = true;
+  editor.dataset.ph      = TYPES[type].ph;
+
+  if (text && text.trim()) {
+    // Zeilenumbrüche in <br>-Elemente umwandeln
+    text.split('\n').forEach((line, i) => {
+      if (i > 0) editor.appendChild(document.createElement('br'));
+      if (line) editor.appendChild(document.createTextNode(line));
+    });
+  }
+
+  // Werkzeug-Buttons
+  const tools = document.createElement('div');
+  tools.className = 'block-tools';
+
+  function mkBtn(ico, title, action) {
+    const b = document.createElement('button');
+    b.className = 'bt';
+    b.title     = title;
+    b.innerHTML = ico;
+    b.addEventListener('mousedown', e => {
+      e.preventDefault(); // Verhindert, dass der Block seinen Fokus verliert
+      action();
+    });
+    return b;
+  }
+
+  tools.appendChild(mkBtn('↑', 'Nach oben (Shift+↑)',  () => moveBlock(wrap, -1)));
+  tools.appendChild(mkBtn('↓', 'Nach unten (Shift+↓)', () => moveBlock(wrap,  1)));
+  tools.appendChild(mkBtn('✕', 'Block löschen',          () => removeBlock(wrap)));
+
+  wrap.appendChild(bar);
+  wrap.appendChild(editor);
+  wrap.appendChild(tools);
+
+  // Fokus-Ereignisse
+  editor.addEventListener('focus', () => {
+    if (focused && focused !== wrap) {
+      focused.classList.remove('is-focused');
+    }
+    focused = wrap;
+    wrap.classList.add('is-focused');
+    updateLegendActive(wrap.dataset.type);
+    updateStatusIndicator(wrap.dataset.type);
+  });
+
+  editor.addEventListener('blur', () => {
+    // Leicht verzögert prüfen, ob ein anderer Block Fokus bekommt
+    setTimeout(() => {
+      if (focused === wrap) {
+        wrap.classList.remove('is-focused');
+        focused = null;
+        clearStatusIndicator();
+        document.querySelectorAll('.leg').forEach(l => l.classList.remove('active'));
+      }
+    }, 80);
+  });
+
+  // Tastatureingaben im Block
+  editor.addEventListener('keydown', e => onKey(e, wrap));
+
+  return wrap;
+}
+
+/* ─────────────────────────────────────────────
+   BLOCK EINFÜGEN
+───────────────────────────────────────────── */
+function insertBlock(type, text, after) {
+  const b = mkBlock(type, text || '');
+  if (after) {
+    after.insertAdjacentElement('afterend', b);
+  } else {
+    docBody.appendChild(b);
+  }
+  return b;
+}
+
+/* ─────────────────────────────────────────────
+   BLOCK FOKUSSIEREN (Cursor ans Ende)
+───────────────────────────────────────────── */
+function focusBlock(block) {
+  const ed = block.querySelector('.block-text');
+  ed.focus();
+  caretToEnd(ed);
+}
+
+/* ─────────────────────────────────────────────
+   BLOCK LÖSCHEN
+───────────────────────────────────────────── */
+function removeBlock(block) {
+  const all = [...docBody.querySelectorAll('.block')];
+
+  if (all.length <= 1) {
+    // Letzten Block nicht löschen, nur leeren und auf normal zurücksetzen
+    const ed = block.querySelector('.block-text');
+    ed.innerHTML = '';
+    setType(block, 'normal');
+    ed.focus();
+    return;
+  }
+
+  const idx = all.indexOf(block);
+  block.remove();
+
+  const remaining = [...docBody.querySelectorAll('.block')];
+  const target    = remaining[Math.max(0, idx - 1)];
+  if (target) focusBlock(target);
+}
+
+/* ─────────────────────────────────────────────
+   BLOCK VERSCHIEBEN
+───────────────────────────────────────────── */
+function moveBlock(block, dir) {
+  const all = [...docBody.querySelectorAll('.block')];
+  const i   = all.indexOf(block);
+
+  if (dir === -1 && i > 0) {
+    // Nach oben: vor den Vorgänger einsetzen
+    docBody.insertBefore(block, all[i - 1]);
+  } else if (dir === 1 && i < all.length - 1) {
+    // Nach unten: nach dem Nachfolger einsetzen
+    all[i + 1].insertAdjacentElement('afterend', block);
+  }
+
+  focusBlock(block);
+}
+
+/* ─────────────────────────────────────────────
+   BLOCKTYP SETZEN
+───────────────────────────────────────────── */
+function setType(block, type) {
+  if (!TYPES[type]) return;
+  block.dataset.type = type;
+
+  const ed = block.querySelector('.block-text');
+  ed.dataset.ph = TYPES[type].ph;
+
+  updateLegendActive(type);
+  updateStatusIndicator(type);
+  showToast('→ ' + TYPES[type].label);
+}
+
+/* ─────────────────────────────────────────────
+   TASTATUREINGABEN IN EINEM BLOCK
+───────────────────────────────────────────── */
+function onKey(e, block) {
+  const ed = e.target;
+
+  // Alt+0-3 oder Ctrl+0-3 → Blocktyp ändern
+  if (e.altKey || e.ctrlKey) {
+    const typeMap = { '0': 'normal', '1': 'ayah', '2': 'hadith', '3': 'athaar' };
+    if (typeMap[e.key] !== undefined) {
+      e.preventDefault();
+      setType(block, typeMap[e.key]);
+      return;
+    }
+  }
+
+  // Enter (ohne Shift) → neuen Block nach diesem erstellen
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    const nb = insertBlock('normal', '', block);
+    focusBlock(nb);
+    return;
+  }
+
+  // Backspace auf leerem Block → Block löschen
+  if (e.key === 'Backspace') {
+    if (isEditorEmpty(ed)) {
+      e.preventDefault();
+      removeBlock(block);
+      return;
+    }
+  }
+
+  // Shift+Pfeil-Oben/Unten → Block verschieben
+  if (e.shiftKey) {
+    if (e.key === 'ArrowUp')   { e.preventDefault(); moveBlock(block, -1); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); moveBlock(block,  1); return; }
+  }
+}
+
+/* Hilfsfunktion: Ist ein contenteditable leer? */
+function isEditorEmpty(el) {
+  return el.textContent.trim() === '' &&
+         el.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '';
+}
+
+/* ─────────────────────────────────────────────
+   LEGENDE: KLICK → TYP ÄNDERN
+───────────────────────────────────────────── */
+document.getElementById('legend').addEventListener('click', e => {
+  const item = e.target.closest('.leg');
+  if (!item) return;
+  if (focused) {
+    setType(focused, item.dataset.type);
+    // Fokus zurück auf den Block setzen (wird durch blur-Verzögerung ggf. verloren)
+    setTimeout(() => { if (focused) focusBlock(focused); }, 90);
+  } else {
+    showToast('Zuerst einen Block durch Klicken auswählen');
+  }
+});
+
+/* ─────────────────────────────────────────────
+   AKTIONS-BUTTONS
+───────────────────────────────────────────── */
+document.getElementById('btn-add').addEventListener('click', () => {
+  const nb = insertBlock('normal', '', focused);
+  focusBlock(nb);
+});
+
+document.getElementById('btn-print').addEventListener('click', () => {
+  window.print();
+});
+
+/* ─────────────────────────────────────────────
+   TOAST-MELDUNGEN
+───────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
+}
+
+/* ─────────────────────────────────────────────
+   CURSOR ANS ENDE SETZEN
+───────────────────────────────────────────── */
+function caretToEnd(el) {
+  el.focus();
+  try {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } catch (err) { /* ignore */ }
+}
+
+/* ─────────────────────────────────────────────
+   INITIALISIERUNG
+───────────────────────────────────────────── */
+(function init() {
+
+  syncToDoc();
+
+  /* Beispiel-Inhalt beim ersten Start */
+  const b1 = insertBlock('normal',
+    'Notizen — Block anklicken, dann Typ per Alt+1/2/3 wählen oder in der Legende links klicken. Shift+Enter für Zeilenumbruch im Block.');
+
+  const b2 = insertBlock('ayah',
+    'قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ\n„Sag: Er ist Allah, der Einzige — Allah, der Beständige." (al-Ikhlāṣ 112:1–2)');
+
+  const b3 = insertBlock('hadith',
+    '«إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ»\n„Wahrlich, Taten werden nach den Absichten beurteilt." — Überliefert von ʿUmar ibn al-Khaṭṭāb (رضي الله عنه), gesammelt bei al-Bukhārī (Nr. 1).');
+
+  const b4 = insertBlock('athaar',
+    'Ibn Rajab al-Ḥanbalī (رحمه الله) sagte: „Das Fundament des Tawḥīd besteht darin, dass man Allah allein anbetet, ohne ihm einen Partner beizugesellen …"');
+
+  const b5 = insertBlock('normal', '');
+
+  // Leeren Block fokussieren
+  requestAnimationFrame(() => focusBlock(b5));
+
+})();
+</script>
+</body>
+</html>
