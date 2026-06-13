@@ -68,6 +68,10 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   #print-frame .page-body.empty::before{display:none!important;}
   /* Blocks */
   #print-frame .block{page-break-inside:avoid!important;break-inside:avoid!important;}
+  #print-frame .block[data-type=title]{background:transparent!important;margin-top:22px!important;margin-bottom:4px!important;align-items:center!important;}
+  #print-frame .block[data-type=title] .bar{width:0!important;background:transparent!important;}
+  #print-frame .block[data-type=title] .block-text{font-family:'Playfair Display',Georgia,serif!important;font-size:15px!important;font-weight:600!important;color:#2A5035!important;letter-spacing:.04em!important;display:flex!important;align-items:center!important;gap:14px!important;padding:6px 16px!important;}
+  #print-frame .block[data-type=title] .block-text::before,#print-frame .block[data-type=title] .block-text::after{content:''!important;flex:1!important;height:1px!important;background:rgba(176,190,168,.7)!important;min-width:0!important;}
   #print-frame .block[data-type=ayah]  {background-color:var(--ay-bg)!important;}
   #print-frame .block[data-type=hadith]{background-color:var(--hd-bg)!important;}
   #print-frame .block[data-type=athar] {background-color:var(--at-bg)!important;}
@@ -438,6 +442,76 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .fo{width:50px;height:12px;flex-shrink:0;}
 
+
+/* Section Title: ─────── Title ─────── */
+.block[data-type=title]{
+  background:transparent!important;
+  margin-top:22px;margin-bottom:4px;
+  align-items:center!important;
+}
+.block[data-type=title] .bar{
+  width:0;background:transparent;  /* hide bar — line spans full width */
+}
+.block[data-type=title] .block-text{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:15px;font-weight:600;color:#2A5035;
+  letter-spacing:.04em;
+  display:flex;align-items:center;gap:14px;
+  padding:6px 16px 6px 16px;min-height:38px;
+}
+.block[data-type=title] .block-text::before,
+.block[data-type=title] .block-text::after{
+  content:'';flex:1;height:1px;
+  background:rgba(176,190,168,.7);
+  pointer-events:none;min-width:0; /* shrinks when title is long */
+}
+/* Tag selection modal */
+.tag-wrap{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(7px);
+  z-index:1800;display:flex;align-items:center;justify-content:center;padding:16px;
+  opacity:0;pointer-events:none;transition:opacity .25s;}
+.tag-wrap.open{opacity:1;pointer-events:all;}
+.tag-box{width:540px;max-width:96vw;
+  background:linear-gradient(160deg,#162118,#080D0A);
+  border:1px solid var(--sb);border-top:3px solid var(--g1);border-radius:8px;
+  padding:28px 28px 22px;box-shadow:0 36px 90px rgba(0,0,0,.85);
+  transform:translateY(10px);transition:transform .25s;}
+.tag-wrap.open .tag-box{transform:translateY(0);}
+.tag-box-ttl{font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:600;
+  font-style:italic;color:var(--st);margin-bottom:5px;}
+.tag-box-sub{font-size:11.5px;color:var(--sm);margin-bottom:20px;}
+.tag-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
+.tag-pill{padding:5px 12px;border-radius:4px;font-size:10.5px;font-family:inherit;
+  background:var(--s2);border:1px solid var(--sb);color:var(--sm);cursor:pointer;
+  transition:all .2s;user-select:none;letter-spacing:.03em;line-height:1;}
+.tag-pill:hover{border-color:rgba(201,168,92,.3);color:var(--st);background:var(--s3);}
+.tag-pill.active{background:var(--gw);border-color:var(--g1);color:var(--g1);}
+.tag-box-foot{display:flex;justify-content:space-between;align-items:center;
+  padding-top:12px;border-top:1px solid var(--sb);}
+.tag-skip{font-size:11px;color:var(--sm);background:none;border:none;cursor:pointer;
+  font-family:inherit;transition:color .2s;}
+.tag-skip:hover{color:var(--st);}
+.tag-save{padding:9px 22px;border-radius:4px;
+  background:linear-gradient(135deg,var(--g1),var(--g3));border:none;
+  color:#060B07;font-size:13px;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:all .2s;}
+.tag-save:hover{background:linear-gradient(135deg,var(--g2),var(--g1));}
+/* Tags button in topbar */
+.btn-tags{display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:4px;
+  border:1px solid var(--sb);background:var(--s2);color:var(--sm);
+  font-size:11px;font-family:inherit;cursor:pointer;transition:all .2s;white-space:nowrap;
+  margin-left:20px;  /* breathing room from save-pill separator */
+}
+.btn-tags:hover{border-color:rgba(201,168,92,.3);color:var(--st);background:var(--s3);}
+.btn-tags.has-tags{border-color:rgba(201,168,92,.3);color:var(--g1);background:var(--gw);}
+/* Library section counter badge */
+.sec-count{font-weight:400;color:var(--smm);letter-spacing:0;text-transform:none;margin-left:4px;}
+/* Science section spacing */
+.sci-sec{margin-bottom:32px;}
+/* Card tags */
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
+.ctag{padding:2px 8px;border-radius:3px;font-size:9.5px;letter-spacing:.04em;
+  background:rgba(201,168,92,.08);border:1px solid rgba(201,168,92,.16);
+  color:var(--g1);white-space:nowrap;}
 /* ── Review Modal ── */
 .rev-wrap{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);
   z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;
@@ -580,7 +654,8 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
     <button class="edt-back" id="edt-back">← Library</button>
     <div class="edt-name" id="edt-name">Untitled</div>
     <div class="save-pill" id="save-pill"><div class="save-dot"></div><span id="save-lbl">Saved</span></div>
-    <button class="btn-review" id="btn-review"><span>◎</span><span id="review-lbl">Mark as Reviewed</span></button>
+    <button class="btn-tags" id="btn-tags">⟐ Sciences</button>
+    <button class="btn-review" id="btn-review"><span id="review-lbl">Mark as Reviewed</span></button>
   </div>
   <div class="edt-main">
     <aside class="sidebar">
@@ -611,6 +686,11 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
           <div class="leg" data-type="hadith"><div class="ldot" style="background:#3A9858;box-shadow:0 0 8px rgba(58,152,88,.35);"></div><div class="lb"><div class="ln">Ḥadīth</div><div class="ls">Prophetic Narration</div></div><div class="lk">Alt+2</div></div>
           <div class="leg" data-type="athar"><div class="ldot" style="background:#4878C8;box-shadow:0 0 8px rgba(72,120,200,.35);"></div><div class="lb"><div class="ln">Athar / Sharḥ</div><div class="ls">Scholar Commentary</div></div><div class="lk">Alt+3</div></div>
           <div class="leg" data-type="note"><div class="ldot" style="background:#3A5040;border:1px solid #4A6050;"></div><div class="lb"><div class="ln">Note</div><div class="ls">Personal Analysis</div></div><div class="lk">Alt+0</div></div>
+          <div class="leg" data-type="title">
+            <div class="ldot" style="background:#FEFCF5;border:1.5px solid rgba(176,190,168,.7);box-shadow:inset 0 0 0 1px rgba(176,190,168,.3);"></div>
+            <div class="lb"><div class="ln">Section Title</div><div class="ls">Chapter / Part heading</div></div>
+            <div class="lk">Alt+4</div>
+          </div>
         </div>
         <div class="cur"><div class="cur-dot" id="cur-dot"></div><span class="cur-lbl">Active:&nbsp;</span><span class="cur-val" id="cur-val">—</span></div>
       </div>
@@ -632,6 +712,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
           <div class="sct"><span class="sct-l">→ Ḥadīth</span>          <span class="sct-k">Alt+2</span></div>
           <div class="sct"><span class="sct-l">→ Athar</span>           <span class="sct-k">Alt+3</span></div>
           <div class="sct"><span class="sct-l">→ Note</span>            <span class="sct-k">Alt+0</span></div>
+          <div class="sct"><span class="sct-l">→ Section Title</span>         <span class="sct-k">Alt+4</span></div>
           <div class="sct"><span class="sct-l">Cycle type (mouse)</span><span class="sct-k">Click ▌</span></div>
         </div>
       </div>
@@ -679,6 +760,19 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   </div>
 </div>
 
+<!-- ── TAG SELECTION MODAL ── -->
+<div class="tag-wrap" id="tag-modal">
+  <div class="tag-box">
+    <div class="tag-box-ttl">Which Islamic sciences does this document cover?</div>
+    <div class="tag-box-sub">Select all that apply — you can edit this anytime using the ⟐ Sciences button.</div>
+    <div class="tag-grid" id="tag-modal-grid"></div>
+    <div class="tag-box-foot">
+      <button class="tag-skip" id="tag-skip">Skip for now</button>
+      <button class="tag-save" id="tag-save">Save Sciences →</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── REVIEW MODAL ── -->
 <div class="rev-wrap" id="rev-modal">
   <div class="rev-box">
@@ -689,7 +783,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
       <button class="rating-btn" data-q="0"><span class="r-icon">○</span><span class="r-label">Forgot</span><span class="r-int" id="ri-0">Tomorrow</span></button>
       <button class="rating-btn" data-q="3"><span class="r-icon">◐</span><span class="r-label">Hard</span><span class="r-int" id="ri-3">—</span></button>
       <button class="rating-btn" data-q="4"><span class="r-icon">●</span><span class="r-label">Good</span><span class="r-int" id="ri-4">—</span></button>
-      <button class="rating-btn" data-q="5"><span class="r-icon">★</span><span class="r-label">Easy</span><span class="r-int" id="ri-5">—</span></button>
+      <button class="rating-btn" data-q="5"><span class="r-icon">✓</span><span class="r-label">Easy</span><span class="r-int" id="ri-5">—</span></button>
     </div>
     <button class="rev-cancel" id="rev-cancel">Cancel</button>
   </div>
@@ -738,7 +832,7 @@ const DB = {
   newDoc(){
     return { id:'doc_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
       title:'',author:'',chapter:'',pageType:'chapter',pgStart:1,
-      blocks:[],createdAt:Date.now(),updatedAt:Date.now(),
+      blocks:[],tags:[],tagsAsked:false,createdAt:Date.now(),updatedAt:Date.now(),
       sr:{interval:1,easeFactor:2.5,repetitions:0,nextReview:null,lastReview:null} };
   }
 };
@@ -816,8 +910,15 @@ function showEditor(id){ currentDocId=id; loadDoc(id); document.getElementById('
 ══════════════════════════════════ */
 function renderLibrary(){
   const ORD={over:0,due:1,new:2,ok:3};
-  const all=DB.all().sort((a,b)=>{ const sa=SM2.status(a.sr),sb=SM2.status(b.sr); if(ORD[sa]!==ORD[sb]) return ORD[sa]-ORD[sb]; if(sa==='ok'&&sb==='ok') return a.sr.nextReview-b.sr.nextReview; return b.updatedAt-a.updatedAt; });
+  const sortFn=(a,b)=>{
+    const sa=SM2.status(a.sr),sb=SM2.status(b.sr);
+    if(ORD[sa]!==ORD[sb]) return ORD[sa]-ORD[sb];
+    if(sa==='ok'&&sb==='ok') return a.sr.nextReview-b.sr.nextReview;
+    return b.updatedAt-a.updatedAt;
+  };
+  const all=DB.all();
   const body=document.getElementById('lib-body'); body.innerHTML='';
+
   if(!all.length){
     body.innerHTML=`<div class="empty-state">
       <svg class="empty-icon" width="120" height="80" viewBox="0 0 120 80" fill="none">
@@ -836,10 +937,47 @@ function renderLibrary(){
     </div>`;
     return;
   }
+
+  /* ── Due for Review banner (cross-science) ── */
   const due=all.filter(d=>['over','due'].includes(SM2.status(d.sr)));
-  if(due.length){ const sec=document.createElement('div'); sec.className='due-sec'; sec.innerHTML=`<div class="sec-lbl"><span class="due-dot"></span>Due for Review (${due.length})</div>`; const g=document.createElement('div'); g.className='cards-grid'; due.forEach(d=>g.appendChild(mkCard(d))); sec.appendChild(g); body.appendChild(sec); }
-  const allSec=document.createElement('div'); allSec.innerHTML=`<div class="sec-lbl">All Documents (${all.length})</div>`;
-  const g=document.createElement('div'); g.className='cards-grid'; all.forEach(d=>g.appendChild(mkCard(d))); allSec.appendChild(g); body.appendChild(allSec);
+  if(due.length){
+    const sec=document.createElement('div'); sec.className='due-sec';
+    sec.innerHTML=`<div class="sec-lbl"><span class="due-dot"></span>Due for Review <span class="sec-count">(${due.length})</span></div>`;
+    const g=document.createElement('div'); g.className='cards-grid';
+    [...due].sort(sortFn).forEach(d=>g.appendChild(mkCard(d)));
+    sec.appendChild(g); body.appendChild(sec);
+  }
+
+  /* ── Group documents by Islamic science ── */
+  const byScience={}; // scienceId -> Set of doc ids (avoid duplicates per section)
+  const untagged=[];
+  all.forEach(doc=>{
+    const tags=(doc.tags||[]).filter(id=>SCIENCES.find(s=>s.id===id));
+    if(!tags.length){ untagged.push(doc); return; }
+    tags.forEach(id=>{
+      if(!byScience[id]) byScience[id]=[];
+      byScience[id].push(doc);
+    });
+  });
+
+  /* Render in canonical SCIENCES order */
+  SCIENCES.forEach(sci=>{
+    const docs=byScience[sci.id]; if(!docs||!docs.length) return;
+    const sec=document.createElement('div'); sec.className='sci-sec';
+    sec.innerHTML=`<div class="sec-lbl">${sci.label}<span class="sec-count"> (${docs.length})</span></div>`;
+    const g=document.createElement('div'); g.className='cards-grid';
+    [...docs].sort(sortFn).forEach(d=>g.appendChild(mkCard(d)));
+    sec.appendChild(g); body.appendChild(sec);
+  });
+
+  /* Untagged fallback section */
+  if(untagged.length){
+    const sec=document.createElement('div'); sec.className='sci-sec';
+    sec.innerHTML=`<div class="sec-lbl">Untagged<span class="sec-count"> (${untagged.length})</span></div>`;
+    const g=document.createElement('div'); g.className='cards-grid';
+    [...untagged].sort(sortFn).forEach(d=>g.appendChild(mkCard(d)));
+    sec.appendChild(g); body.appendChild(sec);
+  }
 }
 
 function mkCard(doc){
@@ -854,7 +992,9 @@ function mkCard(doc){
   if(!doc.blocks.length){ const seg=document.createElement('div'); seg.className='card-bar-seg'; seg.style.background='#1A2B1E'; seg.style.flex='1'; bar.appendChild(seg); }
   card.appendChild(bar);
   const bi={new:'b-new',due:'b-due',over:'b-over',ok:'b-ok'}, icon={new:'◈',due:'◉',over:'⊗',ok:'✓'};
-  card.insertAdjacentHTML('beforeend',`<div class="card-body"><div class="card-title ${!doc.title?'no-tit':''}">${esc(doc.title)||'Untitled Document'}</div><div class="card-author">${esc(doc.author)||'&nbsp;'}</div><div class="card-meta">${doc.chapter?esc(doc.chapter)+' · ':''}${doc.blocks.length} block${doc.blocks.length!==1?'s':''} · ${tAgo(doc.updatedAt)}</div><span class="sr-badge ${bi[status]}">${icon[status]} ${SM2.label(doc.sr)}</span></div><div class="card-foot"><button class="card-open" data-id="${doc.id}">Open ↗</button><button class="card-del" data-id="${doc.id}" title="Delete">✕</button></div>`);
+  const tagHTML=(doc.tags||[]).map(id=>{ const s=SCIENCES.find(x=>x.id===id); return s?`<span class="ctag">${s.label}</span>`:''; }).join('');
+  const tagsRow=tagHTML?`<div class="card-tags">${tagHTML}</div>`:'';
+  card.insertAdjacentHTML('beforeend',`<div class="card-body"><div class="card-title ${!doc.title?'no-tit':''}">${esc(doc.title)||'Untitled Document'}</div><div class="card-author">${esc(doc.author)||'&nbsp;'}</div>${tagsRow}<div class="card-meta">${doc.chapter?esc(doc.chapter)+' · ':''}${doc.blocks.length} block${doc.blocks.length!==1?'s':''} · ${tAgo(doc.updatedAt)}</div><span class="sr-badge ${bi[status]}">${icon[status]} ${SM2.label(doc.sr)}</span></div><div class="card-foot"><button class="card-open" data-id="${doc.id}">Open ↗</button><button class="card-del" data-id="${doc.id}" title="Delete">✕</button></div>`);
   card.querySelector('.card-open').addEventListener('click',e=>{e.stopPropagation();showEditor(doc.id);});
   card.querySelector('.card-del').addEventListener('click', e=>{e.stopPropagation();delPrompt(doc.id,doc.title);});
   card.addEventListener('click',()=>showEditor(doc.id));
@@ -932,6 +1072,7 @@ function loadDoc(id){
   document.getElementById('pg-start').value=pgStart;
   document.getElementById('pg-prev').textContent='Page '+pgStart;
   (doc.blocks||[]).forEach(bd=>{ const b=mkBlock(bd.type); b.dataset.blockId=bd.id; b.querySelector('.block-text').innerHTML=bd.html||''; lastBody().appendChild(b); });
+  updateTagsButton(doc.tags||[]);
   syncMeta(); syncSep(); syncLabels(); layoutSched();
   const b1=document.getElementById('body-1'); if(b1) b1.classList.toggle('empty',b1.querySelectorAll('.block').length===0);
   updateEditorBar(doc); setSaveState('saved');
@@ -946,22 +1087,43 @@ function saveCurrentDoc(){
 }
 function scheduleSave(){ setSaveState('saving'); clearTimeout(saveTimer); saveTimer=setTimeout(saveCurrentDoc,1200); }
 function setSaveState(s){ const p=document.getElementById('save-pill'),l=document.getElementById('save-lbl'); p.className='save-pill '+s; l.textContent=s==='saving'?'Saving…':s==='saved'?'Saved':'Unsaved'; }
-function updateEditorBar(doc){
+function updateEditorBar(doc, lastQuality=null){
   document.getElementById('edt-name').textContent=doc.title||'Untitled';
   const status=SM2.status(doc.sr), btn=document.getElementById('btn-review'), lbl=document.getElementById('review-lbl');
   btn.className='btn-review';
+  /* If a rating was just submitted, show that rating's icon */
+  if(lastQuality!==null){
+    const icons={0:'○',3:'◐',4:'●',5:'✓'};
+    lbl.textContent=(icons[lastQuality]||'◎')+' Reviewed  ·  '+SM2.label(doc.sr);
+    return;
+  }
   if(status==='over'){btn.classList.add('is-over');lbl.textContent='⊗ Overdue — '+SM2.label(doc.sr);}
   else if(status==='due'){btn.classList.add('is-due');lbl.textContent='◉ Review Due Today';}
   else if(status==='ok'){lbl.textContent='◎ Mark as Reviewed  ·  '+SM2.label(doc.sr);}
   else{lbl.textContent='◎ Mark as Reviewed';}
 }
-document.getElementById('edt-back').addEventListener('click',()=>{ clearTimeout(saveTimer); saveCurrentDoc(); showLibrary(); });
+document.getElementById('edt-back').addEventListener('click',()=>{
+  clearTimeout(saveTimer); saveCurrentDoc();
+  const doc = DB.get(currentDocId);
+  // Show tag modal if this is the first time closing (tagsAsked not set)
+  if(doc && !doc.tagsAsked){
+    openTagModal(doc.tags||[], tags=>{
+      const d = DB.get(currentDocId); if(!d) return;
+      if(tags!==null) d.tags = tags;
+      d.tagsAsked = true; d.updatedAt = Date.now();
+      DB.save(d);
+      showLibrary();
+    });
+  } else {
+    showLibrary();
+  }
+});
 
 /* ══════════════════════════════════
    BLOCKS
 ══════════════════════════════════ */
-const TYPES={note:{label:'Note',ph:'Enter your analysis or notes…',dot:'#3A5040'},ayah:{label:'Āyah',ph:'Enter Quranic verse…',dot:'#D4A015'},hadith:{label:'Ḥadīth',ph:'Enter Ḥadīth narration…',dot:'#3A9858'},athar:{label:'Athar / Sharḥ',ph:'Enter scholar commentary…',dot:'#4878C8'}};
-const CYCLE=['note','ayah','hadith','athar'];
+const TYPES={note:{label:'Note',ph:'Enter your analysis or notes…',dot:'#3A5040'},title:{label:'Section Title',ph:'Enter section title…',dot:'#C9A85C'},ayah:{label:'Āyah',ph:'Enter Quranic verse…',dot:'#D4A015'},hadith:{label:'Ḥadīth',ph:'Enter Ḥadīth narration…',dot:'#3A9858'},athar:{label:'Athar / Sharḥ',ph:'Enter scholar commentary…',dot:'#4878C8'}};
+const CYCLE=['note','ayah','hadith','athar','title'];
 let focused=null,blkSeq=0,layoutLocked=false;
 function setInd(t){ const c=TYPES[t]||TYPES.note; cVal.textContent=c.label; cDot.style.background=c.dot; cDot.style.boxShadow='0 0 8px '+c.dot+'66'; }
 function clearInd(){ cVal.textContent='—'; cDot.style.background='var(--sb)'; cDot.style.boxShadow='none'; }
@@ -1006,10 +1168,108 @@ document.getElementById('legend').addEventListener('mousedown',e=>{ const item=e
 document.getElementById('btn-add').addEventListener('click',()=>focusB(insertB('note','',focused)));
 document.getElementById('btn-print').addEventListener('click',()=>window.print());
 
+
+/* ══════════════════════════════════
+   ISLAMIC SCIENCES
+══════════════════════════════════ */
+const SCIENCES=[
+  /* Quran */
+  {id:'tajweed',      label:'Tajwīd / Qirāʾāt'},
+  {id:'tafsir',       label:'Tafsīr'},
+  {id:'usul-tafsir',  label:'Uṣūl al-Tafsīr'},
+  {id:'ulum-quran',   label:'ʿUlūm al-Qurʾān'},
+  /* Ḥadīth */
+  {id:'hadith',       label:'Ḥadīth'},
+  {id:'mustalah',     label:'Muṣṭalaḥ al-Ḥadīth'},
+  {id:'ilal',         label:'ʿIlal al-Ḥadīth'},
+  /* ʿAqīdah */
+  {id:'aqeedah',      label:'ʿAqīdah'},
+  /* Fiqh */
+  {id:'fiqh-hanbali', label:'Fiqh – Ḥanbalī'},
+  {id:'fiqh-shafi',   label:'Fiqh – Shāfiʿī'},
+  {id:'fiqh-maliki',  label:'Fiqh – Mālikī'},
+  {id:'fiqh-hanafi',  label:'Fiqh – Ḥanafī'},
+  {id:'usul-fiqh',    label:'Uṣūl al-Fiqh'},
+  {id:'qawaid',       label:'Qawāʿid Fiqhiyya'},
+  {id:'faraid',       label:'Farāʾiḍ'},
+  /* Arabic Language */
+  {id:'nahw',         label:'Naḥw'},
+  {id:'sarf',         label:'Ṣarf'},
+  {id:'balagha',      label:'Balāghah'},
+  {id:'poetry',       label:'Science of Poetry'},
+  {id:'short-poems',  label:'Short Poems'},
+  {id:'adab',         label:'Arabic Literature'},
+  /* History & Sīrah */
+  {id:'seerah',       label:'Sīrah'},
+  {id:'tarikh',       label:'Islamic History'},
+  /* Spirituality & Logic */
+  {id:'tazkiyah',     label:'Tazkiyah / Adab'},
+  {id:'mantiq',       label:'Manṭiq'},
+];
+
+/* ── Tag modal ── */
+let tagModalCallback = null; // called with chosen tags when modal closes
+
+function openTagModal(currentTags, onDone){
+  tagModalCallback = onDone;
+  const grid = document.getElementById('tag-modal-grid');
+  grid.innerHTML = '';
+  SCIENCES.forEach(s=>{
+    const p = document.createElement('button');
+    p.className = 'tag-pill' + (currentTags.includes(s.id) ? ' active' : '');
+    p.textContent = s.label; p.dataset.tagId = s.id;
+    p.addEventListener('click', () => p.classList.toggle('active'));
+    grid.appendChild(p);
+  });
+  document.getElementById('tag-modal').classList.add('open');
+}
+
+function closeTagModal(save){
+  const modal = document.getElementById('tag-modal');
+  const tags = save
+    ? [...modal.querySelectorAll('.tag-pill.active')].map(p=>p.dataset.tagId)
+    : null; // null = skipped
+  modal.classList.remove('open');
+  if(tagModalCallback) { tagModalCallback(tags); tagModalCallback = null; }
+}
+
+document.getElementById('tag-save').addEventListener('click', () => closeTagModal(true));
+document.getElementById('tag-skip').addEventListener('click', () => closeTagModal(false));
+document.getElementById('tag-modal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('tag-modal')) closeTagModal(false);
+});
+
+/* Tags topbar button */
+document.getElementById('btn-tags').addEventListener('click', ()=>{
+  if(!currentDocId) return;
+  clearTimeout(saveTimer); saveCurrentDoc();
+  const doc = DB.get(currentDocId); if(!doc) return;
+  openTagModal(doc.tags||[], tags=>{
+    if(tags===null) return; // skipped
+    const d = DB.get(currentDocId); if(!d) return;
+    d.tags = tags; d.tagsAsked = true; d.updatedAt = Date.now();
+    DB.save(d);
+    updateTagsButton(tags);
+    showToast(tags.length ? `${tags.length} science${tags.length!==1?'s':''} saved` : 'Tags cleared');
+  });
+});
+
+function updateTagsButton(tags){
+  const btn = document.getElementById('btn-tags');
+  if(!btn) return;
+  if(tags && tags.length){
+    btn.classList.add('has-tags');
+    btn.textContent = '⟐ ' + tags.length + ' Science' + (tags.length!==1?'s':'');
+  } else {
+    btn.classList.remove('has-tags');
+    btn.textContent = '⟐ Sciences';
+  }
+}
+
 /* ══════════════════════════════════
    GLOBAL HOTKEYS  Alt+0/1/2/3
 ══════════════════════════════════ */
-document.addEventListener('keydown',e=>{ if(!e.altKey||e.ctrlKey||e.shiftKey||e.metaKey) return; if(!focused) return; const m={Digit1:'ayah',Digit2:'hadith',Digit3:'athar',Digit0:'note'}; const t=m[e.code]; if(!t) return; e.preventDefault(); applyType(focused,t); },true);
+document.addEventListener('keydown',e=>{ if(!e.altKey||e.ctrlKey||e.shiftKey||e.metaKey) return; if(!focused) return; const m={Digit1:'ayah',Digit2:'hadith',Digit3:'athar',Digit0:'note',Digit4:'title'}; const t=m[e.code]; if(!t) return; e.preventDefault(); applyType(focused,t); },true);
 
 /* ══════════════════════════════════
    LAYOUT ENGINE — flicker-free
@@ -1074,7 +1334,7 @@ function submitReview(q){
   doc.sr=SM2.schedule({...doc.sr},q); doc.updatedAt=Date.now(); DB.save(doc);
   document.getElementById('rev-modal').classList.remove('open');
   showToast('✓ Next review: '+SM2.fmt(doc.sr.interval));
-  updateEditorBar(doc);
+  updateEditorBar(doc, q);
 }
 
 /* ══════════════════════════════════
