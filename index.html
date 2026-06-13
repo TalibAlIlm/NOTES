@@ -87,6 +87,36 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   #print-frame .a4[data-page="1"].cont .doc-head{display:none!important;}
   #print-frame .a4[data-page="1"].cont .p1mini{display:flex!important;}
   #print-frame .pmini::before,#print-frame .pmini::after{background:var(--ru)!important;}
+
+  /* ── Export All as PDF ── */
+  #print-frame.all-docs .all-doc{
+    break-after:page; page-break-after:always;
+    background:var(--d0); padding:52px 64px 50px;
+  }
+  #print-frame.all-docs .all-doc:last-child{break-after:auto;page-break-after:auto;}
+  #print-frame.all-docs .all-doc .doc-head{text-align:center;margin-bottom:28px;}
+  #print-frame.all-docs .all-doc .doc-title{font-family:'Playfair Display',Georgia,serif;font-size:27px;font-weight:600;font-style:italic;color:var(--di);text-align:center;word-break:break-word;line-height:1.25;}
+  #print-frame.all-docs .all-doc .meta-row{display:flex;justify-content:center;align-items:baseline;gap:6px;margin-top:11px;flex-wrap:wrap;}
+  #print-frame.all-docs .all-doc .doc-meta{font-family:'Lato',Arial,sans-serif;font-size:11px;font-weight:300;letter-spacing:.12em;text-transform:uppercase;color:var(--ds);}
+  #print-frame.all-docs .all-doc .msep{color:var(--ru);font-size:14px;line-height:2;}
+  #print-frame.all-docs .all-doc .pmini{display:flex;align-items:center;gap:12px;margin-bottom:24px;font-family:'Lato',Arial,sans-serif;font-size:9.5px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:var(--ru);}
+  #print-frame.all-docs .all-doc .pmini::before,#print-frame.all-docs .all-doc .pmini::after{content:'';flex:1;height:1px;background:var(--ru);opacity:.45;}
+  #print-frame.all-docs .all-doc .doc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:36px;padding-top:12px;border-top:1px solid var(--ru);}
+  #print-frame.all-docs .all-doc .ft{font-size:9.5px;color:var(--ru);letter-spacing:.08em;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #print-frame.all-docs .all-doc .block{page-break-inside:avoid!important;break-inside:avoid!important;position:relative;display:flex;align-items:stretch;margin-bottom:3px;border-radius:3px;}
+  #print-frame.all-docs .all-doc .bar{width:4px;flex-shrink:0;border-radius:3px 0 0 3px;}
+  #print-frame.all-docs .all-doc .block-text{flex:1;padding:9px 14px;font-family:'Lato','Segoe UI',Arial,sans-serif;font-size:13px;line-height:1.9;color:var(--di);word-break:break-word;}
+  #print-frame.all-docs .all-doc .block[data-type=ayah]  {background-color:var(--ay-bg)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=ayah]   .bar{background:var(--ay-br)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=hadith]{background-color:var(--hd-bg)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=hadith] .bar{background:var(--hd-br)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=athar] {background-color:var(--at-bg)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=athar]  .bar{background:var(--at-br)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=title]{background:transparent!important;margin-top:22px!important;margin-bottom:4px!important;}
+  #print-frame.all-docs .all-doc .block[data-type=title] .bar{width:0!important;background:transparent!important;}
+  #print-frame.all-docs .all-doc .block[data-type=title] .block-text{font-family:'Playfair Display',Georgia,serif!important;font-size:15px!important;font-weight:600!important;color:#2A5035!important;letter-spacing:.04em!important;display:flex!important;align-items:center!important;gap:14px!important;}
+  #print-frame.all-docs .all-doc .block[data-type=title] .block-text::before,
+  #print-frame.all-docs .all-doc .block[data-type=title] .block-text::after{content:''!important;flex:1!important;height:1px!important;background:rgba(176,190,168,.7)!important;min-width:0!important;}
 }
 
 /* ═══════════════════════════════════════
@@ -181,6 +211,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   background:var(--s2);border:1px solid var(--sb);color:var(--sm);
   font-size:11.5px;font-family:inherit;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-icon:hover{border-color:rgba(201,168,92,.3);color:var(--st);background:var(--s3);}
+.btn-pdf{border-color:rgba(201,168,92,.25);color:var(--g1)!important;}
 .btn-new{display:flex;align-items:center;gap:8px;padding:9px 20px;border-radius:4px;
   background:linear-gradient(135deg,var(--g1),var(--g3));border:none;
   color:#060B07;font-size:13px;font-weight:700;font-family:inherit;
@@ -634,6 +665,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
       <div><div class="lib-title">Talib al-ʿIlm</div><div class="lib-sub">Islamic Study Notes</div></div>
     </div>
     <div class="lib-acts">
+      <button class="btn-icon btn-pdf" id="btn-export-pdf">⎙ Export All as PDF</button>
       <button class="btn-icon" id="btn-export">⬇ Export Backup</button>
       <button class="btn-icon" id="btn-import">⬆ Import Backup</button>
       <button class="btn-icon" id="btn-about">◈ About</button>
@@ -805,21 +837,95 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
    body-level div before print fires,
    and removing it after.
 ══════════════════════════════════ */
+let _printingAll = false;
+
 window.addEventListener('beforeprint', () => {
+  if (_printingAll) return; /* all-docs export manages its own frame */
   const existing = document.getElementById('print-frame');
   if (existing) existing.remove();
-  const src   = document.getElementById('pages');
+  const src = document.getElementById('pages');
   if (!src) return;
   const frame = document.createElement('div');
-  frame.id    = 'print-frame';
+  frame.id = 'print-frame';
   frame.appendChild(src.cloneNode(true));
   document.body.appendChild(frame);
 });
 window.addEventListener('afterprint', () => {
-  const frame = document.getElementById('print-frame');
-  if (frame) frame.remove();
+  _printingAll = false;
+  document.getElementById('print-frame')?.remove();
 });
 
+
+/* ══════════════════════════════════
+   EXPORT ALL AS PDF
+══════════════════════════════════ */
+function exportAllAsPDF(){
+  const docs = DB.all();
+  if(!docs.length){ showToast('No documents to export'); return; }
+  showToast('Preparing ' + docs.length + ' document' + (docs.length!==1?'s':'') + ' for PDF…');
+
+  setTimeout(()=>{
+    document.getElementById('print-frame')?.remove();
+    _printingAll = true;
+
+    const ORN  = `<svg class="orn" viewBox="0 0 320 28" fill="none"><line x1="0" y1="14" x2="110" y2="14" stroke="#B0BEA8" stroke-width=".6"/><polygon points="124,6 132,14 124,22 116,14" fill="none" stroke="#B0BEA8" stroke-width=".75" opacity=".6"/><polygon points="160,2 174,14 160,26 146,14" fill="rgba(176,190,168,.12)" stroke="#B0BEA8" stroke-width="1"/><polygon points="196,6 204,14 196,22 188,14" fill="none" stroke="#B0BEA8" stroke-width=".75" opacity=".6"/><line x1="210" y1="14" x2="320" y2="14" stroke="#B0BEA8" stroke-width=".6"/></svg>`;
+    const RULE = `<svg class="rule-svg" viewBox="0 0 666 18" fill="none"><line x1="0" y1="9" x2="302" y2="9" stroke="#B0BEA8" stroke-width=".5"/><polygon points="312,4 318,9 312,14 306,9" fill="none" stroke="#B0BEA8" stroke-width=".65" opacity=".65"/><polygon points="333,3 340,9 333,15 326,9" fill="rgba(176,190,168,.18)" stroke="#B0BEA8" stroke-width=".75"/><polygon points="354,4 360,9 354,14 348,9" fill="none" stroke="#B0BEA8" stroke-width=".65" opacity=".65"/><line x1="364" y1="9" x2="666" y2="9" stroke="#B0BEA8" stroke-width=".5"/></svg>`;
+    const FOOT = `<svg class="fo" viewBox="0 0 50 12" fill="none"><line x1="0" y1="6" x2="17" y2="6" stroke="#B0BEA8" stroke-width=".55"/><polygon points="25,1 32,6 25,11 18,6" fill="rgba(176,190,168,.12)" stroke="#B0BEA8" stroke-width=".65"/><line x1="33" y1="6" x2="50" y2="6" stroke="#B0BEA8" stroke-width=".55"/></svg>`;
+
+    const frame = document.createElement('div');
+    frame.id = 'print-frame';
+    frame.className = 'all-docs';
+
+    docs.forEach(doc=>{
+      const wrapper = document.createElement('div');
+      wrapper.className = 'all-doc';
+
+      if(doc.pageType==='cont'){
+        const mini = document.createElement('div');
+        mini.className = 'pmini';
+        const t = esc(doc.title||'');
+        mini.innerHTML = `<span>${t}</span><span class="pmh-sep" ${t?'':'style="display:none"'}>·</span><span>Page ${doc.pgStart||1}</span>`;
+        wrapper.appendChild(mini);
+      } else {
+        const head = document.createElement('header');
+        head.className = 'doc-head';
+        const sep = doc.author&&doc.chapter ? `<span class="msep">·</span>` : '';
+        head.innerHTML =
+          ORN +
+          `<div class="doc-title">${esc(doc.title||'')}</div>` +
+          `<div class="meta-row">
+            ${doc.author?`<div class="doc-meta">${esc(doc.author)}</div>`:''}
+            ${sep}
+            ${doc.chapter?`<div class="doc-meta">${esc(doc.chapter)}</div>`:''}
+          </div>` +
+          RULE;
+        wrapper.appendChild(head);
+      }
+
+      (doc.blocks||[]).forEach(b=>{
+        const bl = document.createElement('div');
+        bl.className = 'block'; bl.dataset.type = b.type;
+        const bar = document.createElement('div'); bar.className = 'bar';
+        const ed  = document.createElement('div'); ed.className  = 'block-text';
+        ed.innerHTML = b.html||'';
+        bl.append(bar, ed);
+        wrapper.appendChild(bl);
+      });
+
+      const foot = document.createElement('footer');
+      foot.className = 'doc-foot';
+      foot.innerHTML = `<span class="ft">${esc(doc.title||'')}</span>${FOOT}<span class="ft">Page ${doc.pgStart||1}</span>`;
+      wrapper.appendChild(foot);
+
+      frame.appendChild(wrapper);
+    });
+
+    document.body.appendChild(frame);
+    window.print();
+  }, 60);
+}
+
+document.getElementById('btn-export-pdf').addEventListener('click', exportAllAsPDF);
 /* ══════════════════════════════════
    STORAGE
 ══════════════════════════════════ */
