@@ -2,104 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#080D0A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#050A07">
 <title>Talib al-ʿIlm — Islamic Study Notes</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;700&display=swap');
 
 /* ═══════════════════════════════════════
-   DESIGN TOKENS
+   DARK FOREST GREEN + GOLD · TOKENS
 ═══════════════════════════════════════ */
 :root{
-  --s0:#050A07;--s1:#0B1310;--s2:#121D17;--s3:#1A2B1E;
-  --sb:#243628;--sd:#2E4432;--sx:#364D3A;
-  --st:#C4D0BC;--sm:#527060;--smm:#3A5040;
-  --g1:#C9A85C;--g2:#E0C078;--g3:#B8943C;
-  --gw:rgba(201,168,92,.08);--gw2:rgba(201,168,92,.16);
-  --d0:#FEFCF5;--di:#1A201C;--ds:#505A50;
-  --ru:#B0BEA8;--ac:#3A6840;
-  --ay-bg:#FFFBEA;--ay-br:#D4A015;
-  --hd-bg:#F0FAF2;--hd-br:#3A9858;
-  --at-bg:#ECF4FC;--at-br:#4878C8;
-  --sr-new:#5A9AD0;--sr-due:#C9A85C;--sr-over:#C05A4A;--sr-ok:#5DB870;
+  /* Backgrounds */
+  --s0:#050A07; --s1:#0B1310; --s2:#121D17; --s3:#1A2B1E;
+  --sb:#243628; --sd:#2E4432; --sx:#364D3A;
+  /* Text */
+  --st:#C4D0BC; --sm:#527060; --smm:#3A5040;
+  /* Gold accent */
+  --g1:#C9A85C; --g2:#E0C078; --g3:#B8943C;
+  --gw:rgba(201,168,92,.08); --gw2:rgba(201,168,92,.16);
+  /* Document (A4 parchment) */
+  --d0:#FEFCF5; --di:#1A201C; --ds:#505A50;
+  --ru:#B0BEA8; --ac:#3A6840;
+  /* Blocks */
+  --ay-bg:#FFFBEA; --ay-br:#D4A015;
+  --hd-bg:#F0FAF2; --hd-br:#3A9858;
+  --at-bg:#ECF4FC; --at-br:#4878C8;
+  /* SR */
+  --sr-new:#5A9AD0; --sr-due:#C9A85C; --sr-over:#C05A4A; --sr-ok:#5DB870;
   --sw:284px;
-  --kh:0px;
-  --sab:env(safe-area-inset-bottom,0px);
-  --sat:env(safe-area-inset-top,0px);
 }
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}
-}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{font-size:16px;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;}
+html{font-size:16px;-webkit-font-smoothing:antialiased;}
 body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   background:var(--s0);color:var(--st);height:100vh;overflow:hidden;}
 
-/* ═══════════════════════════════════════
-   VIEWS
-═══════════════════════════════════════ */
-.view{position:fixed;inset:0;transition:opacity .28s,transform .28s;}
-.view.off{opacity:0;pointer-events:none;transform:translateY(6px);}
+/* ── Views ── */
+.view{position:fixed;inset:0;transition:opacity .3s,transform .3s;}
+.view.off{opacity:0;pointer-events:none;transform:translateY(5px);}
 
 /* ═══════════════════════════════════════
-   PRINT
+   PRINT — JS-powered fix (see script)
+   #print-frame is injected at body root
+   before printing, removed after.
+   This bypasses all position:fixed issues.
 ═══════════════════════════════════════ */
 #print-frame{display:none;}
+
 @media print{
   @page{size:A4 portrait;margin:20mm;}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
   html,body{background:white!important;height:auto!important;overflow:visible!important;}
+  /* Hide every direct child except our clean print frame */
   body>*:not(#print-frame){display:none!important;}
   #print-frame{display:block!important;position:static!important;}
+  /* Pages container */
   #print-frame .pages-cnt{display:block!important;width:100%!important;gap:0!important;}
-  #print-frame .a4{width:100%!important;padding:0!important;box-shadow:none!important;animation:none!important;page-break-after:always!important;break-after:page!important;}
+  /* A4 sheets */
+  #print-frame .a4{
+    width:100%!important;padding:0!important;
+    box-shadow:none!important;animation:none!important;
+    page-break-after:always!important;break-after:page!important;
+  }
   #print-frame .a4:last-child{page-break-after:auto!important;break-after:auto!important;}
   #print-frame .page-body{min-height:auto!important;}
   #print-frame .page-body.empty::before{display:none!important;}
+  /* Blocks */
   #print-frame .block{page-break-inside:avoid!important;break-inside:avoid!important;}
   #print-frame .block[data-type=title]{background:transparent!important;margin-top:22px!important;margin-bottom:4px!important;align-items:center!important;}
   #print-frame .block[data-type=title] .bar{width:0!important;background:transparent!important;}
   #print-frame .block[data-type=title] .block-text{font-family:'Playfair Display',Georgia,serif!important;font-size:15px!important;font-weight:600!important;color:#2A5035!important;letter-spacing:.04em!important;display:flex!important;align-items:center!important;gap:14px!important;padding:6px 16px!important;}
-  #print-frame .block[data-type=title] .block-text::before,
-  #print-frame .block[data-type=title] .block-text::after{content:''!important;flex:1!important;height:1px!important;background:rgba(176,190,168,.7)!important;min-width:0!important;}
-  #print-frame .block[data-type=ayah]{background-color:var(--ay-bg)!important;}
+  #print-frame .block[data-type=title] .block-text::before,#print-frame .block[data-type=title] .block-text::after{content:''!important;flex:1!important;height:1px!important;background:rgba(176,190,168,.7)!important;min-width:0!important;}
+  #print-frame .block[data-type=ayah]  {background-color:var(--ay-bg)!important;}
   #print-frame .block[data-type=hadith]{background-color:var(--hd-bg)!important;}
-  #print-frame .block[data-type=athar]{background-color:var(--at-bg)!important;}
-  #print-frame .block[data-type=ayah] .bar{background:var(--ay-br)!important;}
+  #print-frame .block[data-type=athar] {background-color:var(--at-bg)!important;}
+  #print-frame .block[data-type=ayah]   .bar{background:var(--ay-br)!important;}
   #print-frame .block[data-type=hadith] .bar{background:var(--hd-br)!important;}
-  #print-frame .block[data-type=athar] .bar{background:var(--at-br)!important;}
+  #print-frame .block[data-type=athar]  .bar{background:var(--at-br)!important;}
   #print-frame .block-tools{display:none!important;}
+  /* Headings / meta */
   #print-frame .doc-title,#print-frame .doc-meta{border-color:transparent!important;}
   #print-frame [contenteditable][data-ph]:empty::before{content:''!important;}
   #print-frame .block.focused{outline:none!important;box-shadow:none!important;}
+  /* Continuation mode */
   #print-frame .a4[data-page="1"].cont .doc-head{display:none!important;}
   #print-frame .a4[data-page="1"].cont .p1mini{display:flex!important;}
   #print-frame .pmini::before,#print-frame .pmini::after{background:var(--ru)!important;}
-  #print-frame.all-docs .all-doc{break-after:page;page-break-after:always;background:var(--d0);padding:52px 64px 50px;}
+
+  /* ── Export All as PDF ── */
+  #print-frame.all-docs .all-doc{
+    break-after:page; page-break-after:always;
+    background:var(--d0); padding:52px 64px 50px;
+  }
   #print-frame.all-docs .all-doc:last-child{break-after:auto;page-break-after:auto;}
   #print-frame.all-docs .all-doc .doc-head{text-align:center;margin-bottom:28px;}
   #print-frame.all-docs .all-doc .doc-title{font-family:'Playfair Display',Georgia,serif;font-size:27px;font-weight:600;font-style:italic;color:var(--di);text-align:center;word-break:break-word;line-height:1.25;}
   #print-frame.all-docs .all-doc .meta-row{display:flex;justify-content:center;align-items:baseline;gap:6px;margin-top:11px;flex-wrap:wrap;}
-  #print-frame.all-docs .all-doc .doc-meta{font-size:11px;font-weight:300;letter-spacing:.12em;text-transform:uppercase;color:var(--ds);}
+  #print-frame.all-docs .all-doc .doc-meta{font-family:'Lato',Arial,sans-serif;font-size:11px;font-weight:300;letter-spacing:.12em;text-transform:uppercase;color:var(--ds);}
   #print-frame.all-docs .all-doc .msep{color:var(--ru);font-size:14px;line-height:2;}
-  #print-frame.all-docs .all-doc .pmini{display:flex;align-items:center;gap:12px;margin-bottom:24px;font-size:9.5px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:var(--ru);}
-  #print-frame.all-docs .all-doc .pmini::before,
-  #print-frame.all-docs .all-doc .pmini::after{content:'';flex:1;height:1px;background:var(--ru);opacity:.45;}
+  #print-frame.all-docs .all-doc .pmini{display:flex;align-items:center;gap:12px;margin-bottom:24px;font-family:'Lato',Arial,sans-serif;font-size:9.5px;font-weight:300;letter-spacing:.14em;text-transform:uppercase;color:var(--ru);}
+  #print-frame.all-docs .all-doc .pmini::before,#print-frame.all-docs .all-doc .pmini::after{content:'';flex:1;height:1px;background:var(--ru);opacity:.45;}
   #print-frame.all-docs .all-doc .doc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:36px;padding-top:12px;border-top:1px solid var(--ru);}
   #print-frame.all-docs .all-doc .ft{font-size:9.5px;color:var(--ru);letter-spacing:.08em;max-width:230px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   #print-frame.all-docs .all-doc .block{page-break-inside:avoid!important;break-inside:avoid!important;position:relative;display:flex;align-items:stretch;margin-bottom:3px;border-radius:3px;}
   #print-frame.all-docs .all-doc .bar{width:4px;flex-shrink:0;border-radius:3px 0 0 3px;}
-  #print-frame.all-docs .all-doc .block-text{flex:1;padding:9px 14px;font-size:13px;line-height:1.9;color:var(--di);word-break:break-word;}
-  #print-frame.all-docs .all-doc .block[data-type=ayah]{background-color:var(--ay-bg)!important;}
-  #print-frame.all-docs .all-doc .block[data-type=ayah] .bar{background:var(--ay-br)!important;}
+  #print-frame.all-docs .all-doc .block-text{flex:1;padding:9px 14px;font-family:'Lato','Segoe UI',Arial,sans-serif;font-size:13px;line-height:1.9;color:var(--di);word-break:break-word;}
+  #print-frame.all-docs .all-doc .block[data-type=ayah]  {background-color:var(--ay-bg)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=ayah]   .bar{background:var(--ay-br)!important;}
   #print-frame.all-docs .all-doc .block[data-type=hadith]{background-color:var(--hd-bg)!important;}
   #print-frame.all-docs .all-doc .block[data-type=hadith] .bar{background:var(--hd-br)!important;}
-  #print-frame.all-docs .all-doc .block[data-type=athar]{background-color:var(--at-bg)!important;}
-  #print-frame.all-docs .all-doc .block[data-type=athar] .bar{background:var(--at-br)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=athar] {background-color:var(--at-bg)!important;}
+  #print-frame.all-docs .all-doc .block[data-type=athar]  .bar{background:var(--at-br)!important;}
   #print-frame.all-docs .all-doc .block[data-type=title]{background:transparent!important;margin-top:22px!important;margin-bottom:4px!important;}
   #print-frame.all-docs .all-doc .block[data-type=title] .bar{width:0!important;background:transparent!important;}
   #print-frame.all-docs .all-doc .block[data-type=title] .block-text{font-family:'Playfair Display',Georgia,serif!important;font-size:15px!important;font-weight:600!important;color:#2A5035!important;letter-spacing:.04em!important;display:flex!important;align-items:center!important;gap:14px!important;}
@@ -110,14 +125,19 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 /* ═══════════════════════════════════════
    ONBOARDING
 ═══════════════════════════════════════ */
-.ob-wrap{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(10px);
+.ob-wrap{
+  position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(10px);
   z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px;
-  transition:opacity .3s;overflow-y:auto;}
+  transition:opacity .3s;
+}
 .ob-wrap.off{opacity:0;pointer-events:none;}
-.ob-box{width:600px;max-width:96vw;background:linear-gradient(170deg,#121D17 0%,#080F0A 100%);
+.ob-box{
+  width:600px;max-width:96vw;max-height:92vh;overflow-y:auto;
+  background:linear-gradient(170deg,#121D17 0%,#080F0A 100%);
   border:1px solid var(--sb);border-top:3px solid var(--g1);border-radius:8px;
   box-shadow:0 48px 120px rgba(0,0,0,.9),0 0 0 1px rgba(201,168,92,.05);
-  scrollbar-width:thin;scrollbar-color:var(--sb) transparent;}
+  scrollbar-width:thin;scrollbar-color:var(--sb) transparent;
+}
 .ob-box::-webkit-scrollbar{width:4px;}
 .ob-box::-webkit-scrollbar-thumb{background:var(--sb);}
 .ob-hero{padding:40px 40px 32px;text-align:center;
@@ -144,6 +164,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .ob-p{font-size:12.5px;color:var(--sm);line-height:1.78;margin-bottom:8px;}
 .ob-p:last-child{margin-bottom:0;}
 .ob-p strong{color:var(--st);}
+/* SR timeline */
 .sr-tl{display:flex;align-items:flex-start;margin:16px 0 8px;overflow-x:auto;padding-bottom:4px;}
 .sr-step{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
 .sr-node{width:34px;height:34px;border-radius:50%;border:2px solid var(--g1);
@@ -170,16 +191,19 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .ob-note{font-size:10px;color:var(--smm);margin-top:10px;}
 
 /* ═══════════════════════════════════════
-   LIBRARY — DESKTOP
+   LIBRARY
 ═══════════════════════════════════════ */
 #lib{background:var(--s0);overflow-y:auto;
   scrollbar-width:thin;scrollbar-color:var(--sb) transparent;}
 #lib::-webkit-scrollbar{width:6px;}
 #lib::-webkit-scrollbar-thumb{background:var(--sb);border-radius:3px;}
-.lib-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:18px 36px;background:linear-gradient(160deg,#121D17 0%,#080D0A 100%);
+.lib-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:18px 36px;
+  background:linear-gradient(160deg,#121D17 0%,#080D0A 100%);
   border-bottom:1px solid var(--sb);position:sticky;top:0;z-index:20;
-  box-shadow:0 4px 24px rgba(0,0,0,.5);}
+  box-shadow:0 4px 24px rgba(0,0,0,.5);
+}
 .lib-logo{display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .lib-hex{width:30px;height:30px;}
 .lib-title{font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:700;
@@ -205,30 +229,21 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .ls-close{margin-left:auto;flex-shrink:0;background:none;border:none;
   color:var(--smm);cursor:pointer;font-size:14px;padding:2px 6px;transition:color .2s;}
 .ls-close:hover{color:var(--sm);}
-
-/* Library search bar */
-.lib-search-row{padding:14px 36px 0;display:flex;align-items:center;gap:10px;}
-.lib-search{flex:1;max-width:400px;background:var(--s2);border:1px solid var(--sb);
-  border-radius:6px;padding:9px 14px 9px 36px;color:var(--st);font-size:12.5px;
-  font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23527060' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:11px center;}
-.lib-search:focus{border-color:rgba(201,168,92,.4);box-shadow:0 0 0 3px rgba(201,168,92,.05);}
-.lib-search::placeholder{color:var(--sm);opacity:.5;}
-
-.lib-body{padding:20px 36px 60px;max-width:1200px;margin:0 auto;}
+.lib-body{padding:28px 36px 60px;max-width:1200px;margin:0 auto;}
 .sec-lbl{font-size:8.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
   color:var(--sm);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
 .sec-lbl::after{content:'';flex:1;height:1px;background:var(--sb);}
 .due-sec{margin-bottom:36px;}
 .due-dot{width:7px;height:7px;border-radius:50%;background:var(--sr-over);flex-shrink:0;}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
-.doc-card{background:var(--s1);border:1px solid var(--sb);border-radius:6px;
+.doc-card{
+  background:var(--s1);border:1px solid var(--sb);border-radius:6px;
   overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
-  transition:border-color .2s,transform .2s,box-shadow .2s;}
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
 .doc-card:hover{border-color:rgba(201,168,92,.35);transform:translateY(-2px);
   box-shadow:0 10px 36px rgba(0,0,0,.5),inset 0 0 40px rgba(201,168,92,.012);}
-.doc-card.c-due{border-left:3px solid var(--sr-due);}
+.doc-card.c-due {border-left:3px solid var(--sr-due);}
 .doc-card.c-over{border-left:3px solid var(--sr-over);}
 .card-bar{height:4px;display:flex;}
 .card-bar-seg{height:100%;}
@@ -242,10 +257,10 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .card-meta{font-size:10.5px;color:var(--smm);letter-spacing:.02em;margin-bottom:13px;}
 .sr-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
   border-radius:20px;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
-.sr-badge.b-new{background:rgba(90,154,208,.1);color:var(--sr-new);border:1px solid rgba(90,154,208,.2);}
-.sr-badge.b-due{background:rgba(201,168,92,.1);color:var(--sr-due);border:1px solid rgba(201,168,92,.2);}
-.sr-badge.b-over{background:rgba(192,90,74,.1);color:var(--sr-over);border:1px solid rgba(192,90,74,.2);animation:bpls 2s ease-in-out infinite;}
-.sr-badge.b-ok{background:rgba(93,184,112,.08);color:var(--sr-ok);border:1px solid rgba(93,184,112,.18);}
+.sr-badge.b-new {background:rgba(90,154,208,.1); color:var(--sr-new);border:1px solid rgba(90,154,208,.2);}
+.sr-badge.b-due {background:rgba(201,168,92,.1); color:var(--sr-due);border:1px solid rgba(201,168,92,.2);}
+.sr-badge.b-over{background:rgba(192,90,74,.1);  color:var(--sr-over);border:1px solid rgba(192,90,74,.2);animation:bpls 2s ease-in-out infinite;}
+.sr-badge.b-ok  {background:rgba(93,184,112,.08);color:var(--sr-ok); border:1px solid rgba(93,184,112,.18);}
 @keyframes bpls{0%,100%{opacity:1;}50%{opacity:.6;}}
 .card-foot{padding:11px 18px;border-top:1px solid var(--smm);
   display:flex;align-items:center;justify-content:space-between;}
@@ -261,20 +276,21 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .empty-ttl{font-family:'Playfair Display',Georgia,serif;font-size:20px;font-style:italic;
   color:var(--sm);margin-bottom:8px;}
 .empty-sub{font-size:13px;color:var(--smm);line-height:1.65;margin-bottom:24px;}
-.no-results{text-align:center;padding:48px 24px;color:var(--smm);font-size:13px;font-style:italic;}
 
 /* ═══════════════════════════════════════
-   EDITOR — DESKTOP
+   EDITOR
 ═══════════════════════════════════════ */
 #edt{display:flex;flex-direction:column;}
-.edt-bar{display:flex;align-items:center;height:50px;flex-shrink:0;
+.edt-bar{
+  display:flex;align-items:center;height:50px;flex-shrink:0;
   background:linear-gradient(to bottom,#121D17,#080D0A);
   border-bottom:1px solid var(--sb);z-index:10;
-  box-shadow:0 2px 12px rgba(0,0,0,.4);}
+  box-shadow:0 2px 12px rgba(0,0,0,.4);
+}
 .edt-back{display:flex;align-items:center;gap:7px;padding:0 18px;height:100%;
   background:none;border:none;border-right:1px solid var(--sb);
   color:var(--sm);font-size:12.5px;font-family:inherit;cursor:pointer;
-  transition:color .2s,background .2s;white-space:nowrap;flex-shrink:0;min-width:44px;}
+  transition:color .2s,background .2s;white-space:nowrap;flex-shrink:0;}
 .edt-back:hover{color:var(--g1);background:var(--gw);}
 .edt-name{flex:1;padding:0 18px;font-family:'Playfair Display',Georgia,serif;
   font-size:14px;font-style:italic;color:var(--st);opacity:.65;
@@ -285,19 +301,18 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .save-dot{width:5px;height:5px;border-radius:50%;background:var(--sm);
   transition:background .3s;flex-shrink:0;}
 .save-pill.saving .save-dot{background:var(--g1);animation:bl .8s ease infinite;}
-.save-pill.saved .save-dot{background:var(--sr-ok);}
-.save-pill.unsaved .save-dot{background:var(--sr-over);}
+.save-pill.saved  .save-dot{background:var(--sr-ok);}
 @keyframes bl{0%,100%{opacity:1;}50%{opacity:.2;}}
 .btn-review{display:flex;align-items:center;gap:7px;margin-left:8px;margin-right:8px;
   padding:7px 16px;border-radius:4px;border:1px solid var(--sb);
   background:var(--s2);color:var(--sm);font-size:11.5px;font-family:inherit;
-  cursor:pointer;transition:all .2s;flex-shrink:0;white-space:nowrap;min-height:44px;}
+  cursor:pointer;transition:all .2s;flex-shrink:0;white-space:nowrap;}
 .btn-review:hover{border-color:var(--g1);color:var(--g1);background:var(--gw);}
-.btn-review.is-due{border-color:var(--sr-due);color:var(--sr-due);background:rgba(201,168,92,.07);}
+.btn-review.is-due {border-color:var(--sr-due);color:var(--sr-due);background:rgba(201,168,92,.07);}
 .btn-review.is-over{border-color:var(--sr-over);color:var(--sr-over);background:rgba(192,90,74,.07);animation:bpls 2s infinite;}
 .edt-main{display:flex;flex:1;overflow:hidden;}
 
-/* Sidebar */
+/* ── Sidebar ── */
 .sidebar{width:var(--sw);min-width:var(--sw);height:100%;
   background:linear-gradient(170deg,#0E1912 0%,#060B07 100%);
   border-right:1px solid var(--sb);
@@ -355,7 +370,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .sbtn{width:100%;padding:9px 13px;border:1px solid var(--sb);border-radius:4px;
   background:var(--s1);color:var(--st);font-size:12.5px;font-family:inherit;
   cursor:pointer;display:flex;align-items:center;gap:9px;
-  transition:background .2s,border-color .2s,color .2s;min-height:44px;}
+  transition:background .2s,border-color .2s,color .2s;}
 .sbtn:hover{background:var(--s2);border-color:rgba(201,168,92,.3);color:var(--g1);}
 .sbtn.gold{background:linear-gradient(135deg,var(--g1),var(--g3));
   border-color:var(--g1);color:#060B07;font-weight:700;}
@@ -371,22 +386,29 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .sb-foot{margin-top:auto;padding:11px 20px;font-size:9px;color:var(--sm);
   letter-spacing:.04em;border-top:1px solid var(--sb);flex-shrink:0;}
 
-/* Preview / A4 */
-.preview{flex:1;overflow-y:auto;background-color:#08100A;
-  background-image:linear-gradient(rgba(100,180,110,.013) 1px,transparent 1px),
+/* ── Preview ── */
+.preview{
+  flex:1;overflow-y:auto;
+  background-color:#08100A;
+  background-image:
+    linear-gradient(rgba(100,180,110,.013) 1px,transparent 1px),
     linear-gradient(90deg,rgba(100,180,110,.013) 1px,transparent 1px);
   background-size:28px 28px;
   display:flex;justify-content:center;padding:40px 32px 100px;
-  scrollbar-width:thin;scrollbar-color:#1A2D1E transparent;}
+  scrollbar-width:thin;scrollbar-color:#1A2D1E transparent;
+}
 .preview::-webkit-scrollbar{width:7px;}
 .preview::-webkit-scrollbar-thumb{background:#1A2D1E;border-radius:4px;}
 .preview::-webkit-scrollbar-thumb:hover{background:#243628;}
 .pages-cnt{display:flex;flex-direction:column;align-items:center;gap:28px;width:794px;flex-shrink:0;}
 
+/* ── A4 ── */
 @keyframes pg-in{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
-.a4{width:794px;background:var(--d0);padding:52px 64px 50px;flex-shrink:0;
+.a4{
+  width:794px;background:var(--d0);padding:52px 64px 50px;flex-shrink:0;
   box-shadow:0 0 0 1px rgba(0,0,0,.28),0 4px 20px rgba(0,0,0,.35),
-    0 16px 56px rgba(0,0,0,.3),0 40px 80px rgba(0,0,0,.2);}
+    0 16px 56px rgba(0,0,0,.3),0 40px 80px rgba(0,0,0,.2);
+}
 .a4.new{animation:pg-in .42s cubic-bezier(.22,.8,.36,1) both;}
 .page-body{min-height:768px;}
 .a4:not([data-page="1"]) .page-body{min-height:888px;}
@@ -421,7 +443,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .a4[data-page="1"].cont .doc-head{display:none;}
 .a4[data-page="1"].cont .p1mini{display:flex;}
 
-/* Blocks */
+/* ── Blocks ── */
 .block{position:relative;display:flex;align-items:stretch;margin-bottom:3px;border-radius:3px;transition:background-color .2s;}
 @keyframes tf{0%{opacity:.5;}100%{opacity:1;}}
 .block.flashed{animation:tf .35s ease;}
@@ -430,17 +452,20 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .bar::after{content:'';position:absolute;top:0;bottom:0;left:-5px;right:-5px;}
 .bar:hover{filter:brightness(1.3);}
 .block-text{flex:1;min-height:40px;padding:9px 44px 9px 14px;
-  font-family:'Lato','Segoe UI',Arial,sans-serif;font-size:13px;line-height:1.9;
-  color:var(--di);outline:none;word-break:break-word;direction:ltr;text-align:left;}
+  font-family:'Lato','Segoe UI','Noto Naskh Arabic','Amiri',Arial,sans-serif;font-size:13px;line-height:1.9;
+  color:var(--di);outline:none;word-break:break-word;text-align:start;}
+/* Arabic-heavy blocks (verses/narrations) get a slightly larger, calmer Naskh */
+.block[data-type=ayah] .block-text,
+.block[data-type=hadith] .block-text{font-family:'Amiri','Noto Naskh Arabic','Lato',Georgia,serif;}
 [contenteditable][data-ph]:empty::before{content:attr(data-ph);color:rgba(80,90,80,.26);pointer-events:none;font-style:italic;}
 .block.focused{box-shadow:0 0 0 1.5px rgba(58,104,64,.2),inset 1px 0 0 rgba(58,104,64,.08);}
-.block[data-type=ayah]{background-color:var(--ay-bg);}
-.block[data-type=ayah] .bar{background:var(--ay-br);}
+.block[data-type=ayah]  {background-color:var(--ay-bg);}
+.block[data-type=ayah]  .bar{background:var(--ay-br);}
 .block[data-type=hadith]{background-color:var(--hd-bg);}
 .block[data-type=hadith] .bar{background:var(--hd-br);}
-.block[data-type=athar]{background-color:var(--at-bg);}
-.block[data-type=athar] .bar{background:var(--at-br);}
-.block[data-type=note]{background-color:transparent;}
+.block[data-type=athar] {background-color:var(--at-bg);}
+.block[data-type=athar]  .bar{background:var(--at-br);}
+.block[data-type=note]  {background-color:transparent;}
 .block-tools{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:none;gap:2px;z-index:10;}
 .block:hover .block-tools{display:flex;}
 .bt{width:20px;height:20px;background:rgba(255,255,255,.9);border:1px solid rgba(176,190,168,.55);
@@ -454,22 +479,35 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .fo{width:50px;height:12px;flex-shrink:0;}
 
-/* Section Title Block */
-.block[data-type=title]{background:transparent!important;margin-top:22px;margin-bottom:4px;align-items:center!important;}
-.block[data-type=title] .bar{width:0;background:transparent;}
-.block[data-type=title] .block-text{font-family:'Playfair Display',Georgia,serif;
-  font-size:15px;font-weight:600;color:#2A5035;letter-spacing:.04em;
-  display:flex;align-items:center;gap:14px;padding:6px 16px 6px 16px;min-height:38px;}
-.block[data-type=title] .block-text::before,
-.block[data-type=title] .block-text::after{content:'';flex:1;height:1px;
-  background:rgba(176,190,168,.7);pointer-events:none;min-width:0;}
 
-/* Tag Modal */
+/* Section Title: ─────── Title ─────── */
+.block[data-type=title]{
+  background:transparent!important;
+  margin-top:22px;margin-bottom:4px;
+  align-items:center!important;
+}
+.block[data-type=title] .bar{
+  width:0;background:transparent;  /* hide bar — line spans full width */
+}
+.block[data-type=title] .block-text{
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:15px;font-weight:600;color:#2A5035;
+  letter-spacing:.04em;
+  display:flex;align-items:center;gap:14px;
+  padding:6px 16px 6px 16px;min-height:38px;
+}
+.block[data-type=title] .block-text::before,
+.block[data-type=title] .block-text::after{
+  content:'';flex:1;height:1px;
+  background:rgba(176,190,168,.7);
+  pointer-events:none;min-width:0; /* shrinks when title is long */
+}
+/* Tag selection modal */
 .tag-wrap{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(7px);
   z-index:1800;display:flex;align-items:center;justify-content:center;padding:16px;
   opacity:0;pointer-events:none;transition:opacity .25s;}
 .tag-wrap.open{opacity:1;pointer-events:all;}
-.tag-box{width:540px;max-width:96vw;max-height:90vh;overflow-y:auto;
+.tag-box{width:540px;max-width:96vw;
   background:linear-gradient(160deg,#162118,#080D0A);
   border:1px solid var(--sb);border-top:3px solid var(--g1);border-radius:8px;
   padding:28px 28px 22px;box-shadow:0 36px 90px rgba(0,0,0,.85);
@@ -481,35 +519,37 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .tag-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
 .tag-pill{padding:5px 12px;border-radius:4px;font-size:10.5px;font-family:inherit;
   background:var(--s2);border:1px solid var(--sb);color:var(--sm);cursor:pointer;
-  transition:all .2s;user-select:none;letter-spacing:.03em;line-height:1;min-height:32px;}
+  transition:all .2s;user-select:none;letter-spacing:.03em;line-height:1;}
 .tag-pill:hover{border-color:rgba(201,168,92,.3);color:var(--st);background:var(--s3);}
 .tag-pill.active{background:var(--gw);border-color:var(--g1);color:var(--g1);}
 .tag-box-foot{display:flex;justify-content:space-between;align-items:center;
   padding-top:12px;border-top:1px solid var(--sb);}
 .tag-skip{font-size:11px;color:var(--sm);background:none;border:none;cursor:pointer;
-  font-family:inherit;transition:color .2s;padding:8px;}
+  font-family:inherit;transition:color .2s;}
 .tag-skip:hover{color:var(--st);}
 .tag-save{padding:9px 22px;border-radius:4px;
   background:linear-gradient(135deg,var(--g1),var(--g3));border:none;
   color:#060B07;font-size:13px;font-weight:700;font-family:inherit;
-  cursor:pointer;transition:all .2s;min-height:44px;}
+  cursor:pointer;transition:all .2s;}
 .tag-save:hover{background:linear-gradient(135deg,var(--g2),var(--g1));}
+/* Tags button in topbar */
 .btn-tags{display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:4px;
   border:1px solid var(--sb);background:var(--s2);color:var(--sm);
   font-size:11px;font-family:inherit;cursor:pointer;transition:all .2s;white-space:nowrap;
-  margin-left:20px;}
+  margin-left:20px;  /* breathing room from save-pill separator */
+}
 .btn-tags:hover{border-color:rgba(201,168,92,.3);color:var(--st);background:var(--s3);}
 .btn-tags.has-tags{border-color:rgba(201,168,92,.3);color:var(--g1);background:var(--gw);}
-
-/* Library badges */
+/* Library section counter badge */
 .sec-count{font-weight:400;color:var(--smm);letter-spacing:0;text-transform:none;margin-left:4px;}
+/* Science section spacing */
 .sci-sec{margin-bottom:32px;}
+/* Card tags */
 .card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
 .ctag{padding:2px 8px;border-radius:3px;font-size:9.5px;letter-spacing:.04em;
   background:rgba(201,168,92,.08);border:1px solid rgba(201,168,92,.16);
   color:var(--g1);white-space:nowrap;}
-
-/* Review Modal */
+/* ── Review Modal ── */
 .rev-wrap{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);
   z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px;
   opacity:0;pointer-events:none;transition:opacity .25s;}
@@ -529,7 +569,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .rating-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;}
 .rating-btn{display:flex;flex-direction:column;align-items:center;gap:6px;
   padding:14px 6px 12px;border-radius:6px;background:var(--s2);border:1px solid var(--sb);
-  cursor:pointer;transition:all .2s;font-family:inherit;min-height:44px;}
+  cursor:pointer;transition:all .2s;font-family:inherit;}
 .rating-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4);}
 .rating-btn[data-q="0"]:hover{border-color:var(--sr-over);background:rgba(192,90,74,.1);}
 .rating-btn[data-q="3"]:hover{border-color:#C9885C;background:rgba(201,136,92,.1);}
@@ -539,10 +579,10 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .r-label{font-size:11px;font-weight:700;color:var(--st);}
 .r-int{font-size:9.5px;color:var(--sm);}
 .rev-cancel{width:100%;padding:8px;background:none;border:none;
-  color:var(--sm);font-size:11px;font-family:inherit;cursor:pointer;transition:color .2s;min-height:44px;}
+  color:var(--sm);font-size:11px;font-family:inherit;cursor:pointer;transition:color .2s;}
 .rev-cancel:hover{color:var(--st);}
 
-/* Toast & Badge */
+/* ── Toast / Badge ── */
 .toast{position:fixed;bottom:24px;right:28px;background:var(--s2);
   border:1px solid var(--sb);border-left:3px solid var(--g1);
   color:var(--st);font-size:12px;padding:9px 16px;border-radius:4px;
@@ -555,228 +595,152 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   padding:7px 18px;border-radius:20px;box-shadow:0 4px 20px rgba(201,168,92,.35);
   pointer-events:none;z-index:2501;display:none;}
 #hk-badge.show{display:block;animation:ba .7s ease both;}
-
 /* ═══════════════════════════════════════
-   MOBILE — LIBRARY
+   MOBILE  ·  controls hidden on desktop,
+   revealed when body.is-mobile is set
 ═══════════════════════════════════════ */
-@media(max-width:768px){
-  body{overflow:hidden;position:fixed;width:100%;height:100%;}
-  #lib{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(80px + var(--sab));}
-  .lib-head{padding:12px 16px;padding-top:calc(12px + var(--sat));gap:8px;}
-  .lib-title{font-size:15px;}
-  .lib-sub{display:none;}
-  .lib-acts{display:none;}
-  .lib-search-row{padding:10px 16px 4px;}
-  .lib-search{max-width:100%;font-size:14px;padding:10px 14px 10px 38px;}
-  .ls-warn{padding:10px 16px;font-size:11px;}
-  .lib-body{padding:12px 16px calc(80px + var(--sab));}
-  .cards-grid{grid-template-columns:1fr;gap:12px;}
-  .doc-card{border-radius:8px;}
-  .sec-lbl{font-size:9px;}
-  .lib-fab{display:flex!important;}
-  .lib-mob-acts{display:flex!important;}
+.m-menu-btn,.m-lib-menu-btn,.m-fab{display:none;}
 
-  /* Mobile bottom bar in library */
-  .lib-mob-bar{
-    display:flex!important;position:fixed;bottom:0;left:0;right:0;
-    background:linear-gradient(to top,var(--s1),rgba(11,19,16,.96));
-    border-top:1px solid var(--sb);
-    padding:10px 16px calc(10px + var(--sab));
-    gap:8px;z-index:50;backdrop-filter:blur(8px);
-  }
-  .lib-mob-btn{flex:1;padding:10px 8px;border:1px solid var(--sb);border-radius:6px;
-    background:var(--s2);color:var(--sm);font-size:11px;font-family:inherit;
-    cursor:pointer;transition:all .2s;text-align:center;min-height:44px;}
-  .lib-mob-btn:active{transform:scale(.97);}
-  .lib-mob-btn.gold{background:linear-gradient(135deg,var(--g1),var(--g3));
-    border-color:var(--g1);color:#060B07;font-weight:700;}
+.m-menu-btn{height:100%;width:50px;border:none;border-left:1px solid var(--sb);
+  background:none;color:var(--sm);font-size:22px;line-height:1;cursor:pointer;flex-shrink:0;}
+.m-menu-btn:active{background:var(--gw);color:var(--g1);}
+.m-lib-menu-btn{width:42px;height:38px;border-radius:6px;border:1px solid var(--sb);
+  background:var(--s2);color:var(--st);font-size:20px;line-height:1;cursor:pointer;flex-shrink:0;}
+
+/* ── Keyboard color rail (the mobile signature) ── */
+#kb-rail{position:fixed;left:0;right:0;bottom:0;z-index:2400;display:none;
+  background:rgba(8,13,10,.86);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
+  border-top:1px solid rgba(201,168,92,.22);
+  box-shadow:0 -10px 40px rgba(0,0,0,.55);
+  padding-bottom:env(safe-area-inset-bottom);
+  transition:transform .22s cubic-bezier(.22,.8,.36,1),opacity .18s;
+  transform:translateY(130%);opacity:0;will-change:transform;}
+#kb-rail.show{transform:translateY(0);opacity:1;}
+.kb-scroll{display:flex;align-items:center;gap:7px;padding:9px 12px;
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.kb-scroll::-webkit-scrollbar{display:none;}
+.kb-type{display:flex;align-items:center;gap:7px;flex-shrink:0;height:38px;padding:0 14px;
+  border-radius:19px;background:var(--s2);border:1px solid var(--sb);color:var(--st);
+  font-family:inherit;font-size:13px;cursor:pointer;white-space:nowrap;
+  transition:border-color .15s,background .15s,transform .08s;}
+.kb-type:active{transform:scale(.95);}
+.kb-type.on{border-color:var(--g1);background:var(--gw2);color:var(--g2);font-weight:700;
+  box-shadow:0 0 0 1px rgba(201,168,92,.3),0 2px 12px rgba(201,168,92,.18);}
+.kb-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.kb-type.on .kb-dot{box-shadow:0 0 7px currentColor;}
+.kb-div{width:1px;height:24px;background:var(--sb);flex-shrink:0;margin:0 3px;}
+.kb-act{flex-shrink:0;min-width:38px;height:38px;padding:0 11px;border-radius:10px;
+  background:var(--s2);border:1px solid var(--sb);color:var(--sm);
+  font-family:inherit;font-size:16px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .08s,background .15s,color .15s,border-color .15s;}
+.kb-act:active{transform:scale(.92);background:var(--s3);}
+.kb-del:active{border-color:var(--sr-over);color:var(--sr-over);}
+.kb-done{font-size:13px;color:var(--g1);border-color:rgba(201,168,92,.3);background:var(--gw);font-weight:700;}
+
+/* ── Bottom sheets ── */
+.sheet-wrap{position:fixed;inset:0;z-index:2600;display:flex;align-items:flex-end;
+  background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:opacity .25s;}
+.sheet-wrap.open{opacity:1;pointer-events:auto;}
+.sheet{width:100%;max-height:88vh;overflow-y:auto;
+  background:linear-gradient(180deg,#13201A 0%,#0A120D 100%);
+  border-top:1px solid var(--sb);border-radius:20px 20px 0 0;
+  box-shadow:0 -20px 60px rgba(0,0,0,.7);
+  padding:10px 18px calc(18px + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.22,.9,.34,1);}
+.sheet-wrap.open .sheet{transform:translateY(0);}
+.sheet-grip{width:38px;height:4px;border-radius:2px;background:var(--sb);margin:6px auto 14px;}
+.sheet-title{font-family:'Playfair Display',Georgia,serif;font-style:italic;
+  font-size:17px;color:var(--st);margin-bottom:14px;padding:0 4px;}
+.sheet-sec-lbl{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--sm);margin:18px 4px 9px;}
+.sheet-row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  padding:14px;margin-bottom:8px;border-radius:12px;background:var(--s2);
+  border:1px solid var(--sb);color:var(--st);font-family:inherit;font-size:15px;
+  cursor:pointer;transition:background .15s,border-color .15s;}
+.sheet-row:active{background:var(--s3);border-color:rgba(201,168,92,.3);}
+.sheet-row.gold{background:linear-gradient(135deg,rgba(201,168,92,.16),rgba(201,168,92,.06));border-color:rgba(201,168,92,.35);}
+.sheet-ico{font-size:18px;width:24px;text-align:center;color:var(--g1);flex-shrink:0;}
+.sheet-lbl{flex:1;display:flex;flex-direction:column;gap:2px;line-height:1.25;}
+.sheet-sub{font-size:11px;color:var(--sm);}
+.sheet-chev{color:var(--smm);font-size:20px;flex-shrink:0;}
+.seg{display:flex;gap:7px;}
+.seg-btn{flex:1;padding:13px;border-radius:11px;background:var(--s2);border:1px solid var(--sb);
+  color:var(--sm);font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s;}
+.seg-btn.on{background:var(--gw2);border-color:var(--g1);color:var(--g2);font-weight:700;}
+.sheet-pg{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;
+  padding:13px 14px;background:var(--s2);border:1px solid var(--sb);border-radius:11px;}
+.sheet-pg-lbl{font-size:14px;color:var(--st);}
+.sheet-pg input{width:84px;padding:10px;border-radius:8px;background:var(--s1);border:1px solid var(--sb);
+  color:var(--st);font-family:'Courier New',monospace;font-size:17px;font-weight:600;text-align:center;outline:none;}
+.sheet-pg input:focus{border-color:var(--g1);}
+.sheet-close{width:100%;margin-top:14px;padding:14px;border-radius:12px;background:none;
+  border:1px solid var(--sb);color:var(--sm);font-family:inherit;font-size:15px;cursor:pointer;}
+.sheet-close:active{background:var(--s2);}
+
+/* ── New-document FAB ── */
+.m-fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:30;
+  width:58px;height:58px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--g2),var(--g3));color:#060B07;
+  font-size:30px;line-height:1;font-weight:300;cursor:pointer;
+  box-shadow:0 8px 28px rgba(201,168,92,.4),0 2px 6px rgba(0,0,0,.4);transition:transform .15s;}
+.m-fab:active{transform:scale(.9);}
+
+/* ═══ Layout switches when phone mode is active ═══ */
+body.is-mobile .m-menu-btn,
+body.is-mobile .m-lib-menu-btn,
+body.is-mobile .m-fab{display:flex;align-items:center;justify-content:center;}
+body.is-mobile #kb-rail{display:block;}
+
+body.is-mobile .sidebar{display:none;}
+body.is-mobile .btn-tags,
+body.is-mobile .btn-review{display:none;}
+body.is-mobile .save-pill{padding:0 12px;}
+body.is-mobile .save-pill #save-lbl{display:none;}
+body.is-mobile .edt-back{padding:0 14px;font-size:0;}
+body.is-mobile .edt-back::before{content:'←';font-size:19px;color:inherit;}
+body.is-mobile .edt-name{font-size:13px;padding:0 12px;}
+
+body.is-mobile .lib-head{padding:13px 16px;}
+body.is-mobile .lib-acts .btn-icon,
+body.is-mobile #btn-new-doc{display:none;}
+body.is-mobile .lib-body{padding:18px 16px 120px;}
+body.is-mobile .cards-grid{grid-template-columns:1fr;}
+body.is-mobile .ls-warn{padding:9px 16px;font-size:11px;}
+
+body.is-mobile .preview{padding:14px 12px 42vh;background-size:22px 22px;}
+body.is-mobile .pages-cnt{width:100%;gap:18px;}
+body.is-mobile .a4{width:100%;padding:30px 20px 26px;
+  box-shadow:0 6px 22px rgba(0,0,0,.4),0 1px 0 rgba(0,0,0,.3);}
+body.is-mobile .page-body,
+body.is-mobile .a4:not([data-page="1"]) .page-body{min-height:180px;}
+body.is-mobile .orn{width:82%;}
+body.is-mobile .rule-svg{height:14px;}
+body.is-mobile .doc-title{font-size:22px;}
+body.is-mobile .block-text{font-size:16px;line-height:1.85;padding:11px 16px;}
+body.is-mobile .block[data-type=ayah] .block-text,
+body.is-mobile .block[data-type=hadith] .block-text{font-size:18px;line-height:2;}
+body.is-mobile .block-tools{display:none!important;}
+body.is-mobile .block.focused{box-shadow:0 0 0 2px rgba(58,104,64,.4);}
+body.is-mobile .block{scroll-margin-bottom:120px;}
+body.is-mobile .bar{width:6px;}
+body.is-mobile .toast{left:16px;right:16px;bottom:calc(90px + env(safe-area-inset-bottom));text-align:center;}
+body.is-mobile #hk-badge{display:none!important;}
+
+/* Smaller phones: 2×2 ratings, full-bleed onboarding */
+@media (max-width:520px){
+  .rating-grid{grid-template-columns:repeat(2,1fr);}
+  .rev-box,.tag-box{width:100%;}
+  .ob-box{border-radius:0;max-height:100dvh;}
+  .ob-hero{padding:30px 24px 24px;}
+  .ob-body{padding:0 24px 8px;}
+  .ob-footer{padding:20px 24px 28px;}
 }
 
-/* Desktop-only lib elements */
-.lib-mob-bar{display:none;}
-
-/* ═══════════════════════════════════════
-   MOBILE — EDITOR
-═══════════════════════════════════════ */
-@media(max-width:768px){
-  #edt{position:fixed;inset:0;display:flex;flex-direction:column;}
-
-  /* Simplified top bar */
-  .edt-bar{height:48px;padding-top:var(--sat);}
-  .edt-back{padding:0 14px;font-size:12px;}
-  .edt-name{font-size:13px;padding:0 10px;}
-  .save-pill{padding:0 10px;}
-  .save-pill span:last-child{display:none;} /* hide "Saved" text, keep dot */
-  .btn-tags{display:none!important;}
-  .btn-review{display:none!important;}
-
-  /* Mobile menu button */
-  .mob-menu-btn{display:flex!important;}
-
-  /* Hide desktop sidebar */
-  .sidebar{display:none;}
-
-  /* Preview — full width, no padding */
-  .edt-main{flex-direction:column;overflow:hidden;}
-  .preview{padding:12px 0 calc(160px + var(--kh));justify-content:center;}
-  .pages-cnt{width:100%;max-width:100%;align-items:stretch;gap:12px;}
-
-  /* A4 scaled to fit phone */
-  .a4{width:100%!important;padding:32px 24px 28px;border-radius:0;
-    box-shadow:0 2px 12px rgba(0,0,0,.3);}
-  .a4.new{animation:pg-in-mob .32s cubic-bezier(.22,.8,.36,1) both;}
-  @keyframes pg-in-mob{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-  .doc-title{font-size:20px;}
-  .orn{width:200px;}
-  .page-body.empty::before{font-size:12px;margin-top:32px;}
-
-  /* Adjust block text for mobile */
-  .block-text{font-size:14px;padding:10px 36px 10px 12px;line-height:1.8;}
-  .block-tools{right:4px;}
-
-  /* Mobile keyboard toolbar — always rendered, shown when block focused */
-  .mob-kb-bar{display:flex!important;}
-
-  /* Mobile slide-over sidebar panel */
-  .mob-sidebar-panel{display:flex!important;}
-}
-
-/* ─── Mobile menu button (hidden on desktop) ─── */
-.mob-menu-btn{display:none;align-items:center;justify-content:center;
-  width:44px;height:44px;background:none;border:none;color:var(--sm);
-  font-size:18px;cursor:pointer;flex-shrink:0;transition:color .2s;}
-.mob-menu-btn:active{color:var(--g1);}
-
-/* ═══════════════════════════════════════
-   MOBILE KEYBOARD TOOLBAR
-   Sits above the virtual keyboard
-═══════════════════════════════════════ */
-.mob-kb-bar{
-  display:none; /* shown via media query */
-  position:fixed;left:0;right:0;
-  bottom:calc(var(--kh) + var(--sab));
-  background:linear-gradient(to top,#0B1310,#121D17);
-  border-top:1px solid var(--sb);
-  flex-direction:column;
-  z-index:900;
-  transition:bottom .15s;
-  box-shadow:0 -4px 20px rgba(0,0,0,.5);
-}
-.mob-kb-types{
-  display:flex;gap:0;overflow-x:auto;
-  padding:8px 12px 6px;
-  scrollbar-width:none;-ms-overflow-style:none;
-}
-.mob-kb-types::-webkit-scrollbar{display:none;}
-.mob-kb-pill{
-  flex-shrink:0;
-  display:flex;align-items:center;gap:7px;
-  padding:7px 14px;border-radius:20px;
-  background:var(--s2);border:1.5px solid var(--sb);
-  color:var(--sm);font-size:12px;font-family:inherit;
-  cursor:pointer;transition:all .18s;white-space:nowrap;
-  min-height:36px;margin-right:6px;
-}
-.mob-kb-pill:last-child{margin-right:0;}
-.mob-kb-pill .kp-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
-.mob-kb-pill:active{transform:scale(.96);}
-.mob-kb-pill.kp-active{border-width:2px;}
-.mob-kb-pill[data-type=ayah]   .kp-dot{background:#D4A015;}
-.mob-kb-pill[data-type=hadith] .kp-dot{background:#3A9858;}
-.mob-kb-pill[data-type=athar]  .kp-dot{background:#4878C8;}
-.mob-kb-pill[data-type=note]   .kp-dot{background:#3A5040;border:1px solid #5A7060;}
-.mob-kb-pill[data-type=title]  .kp-dot{background:rgba(201,168,92,.6);border:1px solid rgba(201,168,92,.4);}
-.mob-kb-pill[data-type=ayah].kp-active  {background:rgba(212,160,21,.12);border-color:#D4A015;color:#D4A015;}
-.mob-kb-pill[data-type=hadith].kp-active{background:rgba(58,152,88,.12); border-color:#3A9858;color:#3A9858;}
-.mob-kb-pill[data-type=athar].kp-active {background:rgba(72,120,200,.12);border-color:#4878C8;color:#4878C8;}
-.mob-kb-pill[data-type=note].kp-active  {background:rgba(58,80,64,.3);   border-color:#5A7060;color:var(--st);}
-.mob-kb-pill[data-type=title].kp-active {background:rgba(201,168,92,.1); border-color:var(--g1);color:var(--g1);}
-
-.mob-kb-actions{
-  display:flex;align-items:center;
-  padding:4px 12px calc(6px);
-  gap:6px;
-  border-top:1px solid rgba(36,54,40,.7);
-}
-.mob-kb-act{
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:7px 12px;border-radius:6px;
-  background:var(--s2);border:1px solid var(--sb);
-  color:var(--st);font-size:12px;font-family:inherit;
-  cursor:pointer;transition:all .18s;white-space:nowrap;
-  min-height:36px;flex-shrink:0;
-}
-.mob-kb-act:active{transform:scale(.96);background:var(--s3);}
-.mob-kb-act.add{background:linear-gradient(135deg,var(--g1),var(--g3));
-  border-color:var(--g1);color:#060B07;font-weight:700;flex:1;}
-.mob-kb-act.add:active{background:linear-gradient(135deg,var(--g2),var(--g1));}
-.mob-kb-act.del{color:var(--sr-over);border-color:rgba(192,90,74,.25);}
-.mob-kb-act.del:active{background:rgba(192,90,74,.1);}
-.mob-kb-spacer{flex:1;}
-
-/* ═══════════════════════════════════════
-   MOBILE SLIDE-OVER SIDEBAR PANEL
-═══════════════════════════════════════ */
-.mob-sidebar-panel{
-  display:none; /* shown via media query */
-  position:fixed;inset:0;z-index:1500;
-}
-.mob-sidebar-overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
-}
-.mob-sidebar-drawer{
-  position:absolute;right:0;top:0;bottom:0;width:min(320px, 92vw);
-  background:linear-gradient(170deg,#0E1912 0%,#060B07 100%);
-  border-left:1px solid var(--sb);
-  display:flex;flex-direction:column;overflow-y:auto;
-  transform:translateX(100%);transition:transform .3s cubic-bezier(.22,.8,.36,1);
-  padding-top:var(--sat);
-  scrollbar-width:thin;scrollbar-color:var(--sb) transparent;
-}
-.mob-sidebar-drawer::-webkit-scrollbar{width:3px;}
-.mob-sidebar-drawer::-webkit-scrollbar-thumb{background:var(--sb);}
-.mob-sidebar-panel.open .mob-sidebar-drawer{transform:translateX(0);}
-.mob-sidebar-panel.open .mob-sidebar-overlay{opacity:1;}
-.mob-sidebar-overlay{opacity:0;transition:opacity .3s;}
-.mob-sb-head{display:flex;align-items:center;justify-content:space-between;
-  padding:14px 18px;border-bottom:1px solid var(--sb);}
-.mob-sb-head-title{font-family:'Playfair Display',Georgia,serif;font-size:15px;color:var(--g1);}
-.mob-sb-close{width:36px;height:36px;background:var(--s2);border:1px solid var(--sb);
-  border-radius:6px;color:var(--sm);font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.mob-sb-close:active{background:var(--s3);color:var(--st);}
-
-/* Mobile bottom-sheet modals */
-@media(max-width:768px){
-  .tag-wrap{align-items:flex-end;padding:0;}
-  .tag-box{width:100%;max-width:100%;border-radius:16px 16px 0 0;
-    border-top:3px solid var(--g1);border-left:none;border-right:none;border-bottom:none;
-    padding:24px 20px calc(20px + var(--sab));
-    max-height:85vh;overflow-y:auto;
-    transform:translateY(100%);}
-  .tag-wrap.open .tag-box{transform:translateY(0);}
-
-  .rev-wrap{align-items:flex-end;padding:0;}
-  .rev-box{width:100%;max-width:100%;border-radius:16px 16px 0 0;
-    border-top:3px solid var(--g1);border-left:none;border-right:none;border-bottom:none;
-    padding:24px 20px calc(20px + var(--sab));
-    transform:translateY(100%);}
-  .rev-wrap.open .rev-box{transform:translateY(0);}
-  .rating-grid{grid-template-columns:repeat(4,1fr);gap:6px;}
-  .rating-btn{padding:12px 4px 10px;}
-  .r-icon{font-size:18px;}
-
-  .ob-wrap{align-items:flex-start;padding-top:0;}
-  .ob-box{width:100%;max-width:100%;border-radius:0 0 8px 8px;
-    border-top-width:1px;border-left:none;border-right:none;
-    max-height:92vh;overflow-y:auto;}
-  .ob-hero{padding:28px 20px 24px;padding-top:calc(28px + var(--sat));}
-  .ob-body{padding:0 20px 8px;}
-  .ob-footer{padding:20px 20px calc(24px + var(--sab));}
-
-  /* Toast repositioned above keyboard toolbar */
-  .toast{bottom:calc(var(--kh) + var(--sab) + 140px);right:16px;left:16px;text-align:center;}
-  #hk-badge{bottom:calc(var(--kh) + var(--sab) + 180px);right:16px;}
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
 }
 </style>
 </head>
@@ -807,8 +771,8 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
         <p class="ob-p">Write using four <strong>color-coded block types</strong>: <strong style="color:#D4A015;">Āyah</strong> (Quranic verses), <strong style="color:#3A9858;">Ḥadīth</strong> (prophetic narrations), <strong style="color:#4878C8;">Athar / Sharḥ</strong> (scholarly commentary), and plain <strong>Notes</strong>. Documents are saved automatically and organized in your personal library.</p>
       </div>
       <div class="ob-sec">
-        <div class="ob-sh"><div class="ob-ico ico-b">🔄</div>Spaced Repetition — Study Smarter</div>
-        <p class="ob-p">Built-in <strong>SM-2 Spaced Repetition</strong> — the same algorithm behind Anki. After reading, click <strong>Mark as Reviewed</strong> and rate your retention. Intervals adapt automatically.</p>
+        <div class="ob-sh"><div class="ob-ico ico-b">🔄</div>Spaced Repetition — Study Smarter, Not Harder</div>
+        <p class="ob-p">Built-in <strong>SM-2 Spaced Repetition</strong> — the same algorithm behind Anki. Instead of re-reading everything daily, the system schedules each document at the optimal moment before you forget it.</p>
         <div class="sr-tl">
           <div class="sr-step"><div class="sr-node first">📖</div><div class="sr-d">Day 1</div><div class="sr-a">Study</div></div>
           <div class="sr-ln"></div>
@@ -818,17 +782,19 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
           <div class="sr-ln"></div>
           <div class="sr-step"><div class="sr-node">◎</div><div class="sr-d">Day 30–60</div><div class="sr-a">Review</div></div>
           <div class="sr-ln"></div>
-          <div class="sr-step"><div class="sr-node">◎</div><div class="sr-d">Day 90+</div><div class="sr-a">Long-term</div></div>
+          <div class="sr-step"><div class="sr-node">◎</div><div class="sr-d">Day 90+</div><div class="sr-a">Review</div></div>
         </div>
+        <p class="ob-p">After reading, click <strong>Mark as Reviewed</strong> and rate your retention — <em>Forgot, Hard, Good,</em> or <em>Easy</em>. Intervals adapt automatically. Documents due for review are highlighted in your library.</p>
       </div>
       <div class="ob-sec">
         <div class="ob-sh"><div class="ob-ico ico-r">⚠</div>Important — Your Data &amp; Storage</div>
         <div class="ob-warn">
           <p class="ob-p" style="color:var(--st);font-weight:700;margin-bottom:8px;">Your notes are saved in this browser's local storage only.</p>
           <ul>
-            <li>Clearing browser data will <strong>permanently delete all notes</strong>.</li>
-            <li>Use <strong>Export Backup</strong> regularly to download a JSON backup file.</li>
+            <li>Clearing browser data or cookies will <strong>permanently delete all notes</strong>.</li>
+            <li>Use <strong>Export Backup</strong> regularly to download a JSON file of all documents.</li>
             <li>Use <strong>Import Backup</strong> to restore — documents merge without duplicates.</li>
+            <li>Notes are tied to this specific browser on this device.</li>
           </ul>
         </div>
       </div>
@@ -856,7 +822,8 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
       <button class="btn-icon" id="btn-export">⬇ Export Backup</button>
       <button class="btn-icon" id="btn-import">⬆ Import Backup</button>
       <button class="btn-icon" id="btn-about">◈ About</button>
-      <button class="btn-new" id="btn-new-doc">＋ New Document</button>
+      <button class="m-lib-menu-btn" id="m-lib-menu" aria-label="Library options">⋯</button>
+      <button class="btn-new"  id="btn-new-doc">＋ New Document</button>
     </div>
   </div>
   <div class="ls-warn" id="ls-warn">
@@ -864,17 +831,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
     <span>Notes are stored in this browser only — <strong>Export Backup</strong> regularly to avoid data loss.</span>
     <button class="ls-close" id="ls-close">✕</button>
   </div>
-  <div class="lib-search-row">
-    <input class="lib-search" id="lib-search" type="search" placeholder="Search documents…" autocomplete="off" spellcheck="false">
-  </div>
   <div class="lib-body" id="lib-body"></div>
-  <!-- Mobile bottom bar -->
-  <div class="lib-mob-bar">
-    <button class="lib-mob-btn" id="mob-btn-export">⬇ Backup</button>
-    <button class="lib-mob-btn" id="mob-btn-import">⬆ Restore</button>
-    <button class="lib-mob-btn" id="mob-btn-about">◈ About</button>
-    <button class="lib-mob-btn gold" id="mob-btn-new">＋ New</button>
-  </div>
 </div>
 
 <!-- ── EDITOR ── -->
@@ -885,11 +842,9 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
     <div class="save-pill" id="save-pill"><div class="save-dot"></div><span id="save-lbl">Saved</span></div>
     <button class="btn-tags" id="btn-tags">⟐ Sciences</button>
     <button class="btn-review" id="btn-review"><span id="review-lbl">Mark as Reviewed</span></button>
-    <!-- Mobile menu button -->
-    <button class="mob-menu-btn" id="mob-menu-btn" aria-label="Document options">☰</button>
+    <button class="m-menu-btn" id="m-menu" aria-label="Document options">⋯</button>
   </div>
   <div class="edt-main">
-    <!-- Desktop sidebar -->
     <aside class="sidebar">
       <div class="sb-sec">
         <div class="sb-ttl">Document</div>
@@ -900,7 +855,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
           <label>First Page Layout</label>
           <div class="pgtype">
             <button class="pgt on" data-pt="chapter" id="pgt-ch">Title Page<span class="pgt-sub">Ornament header</span></button>
-            <button class="pgt" data-pt="cont" id="pgt-co">Continuation<span class="pgt-sub">Minimal header</span></button>
+            <button class="pgt"    data-pt="cont"    id="pgt-co">Continuation<span class="pgt-sub">Minimal header</span></button>
           </div>
         </div>
         <div class="fi pg-row" id="pg-row" style="display:none;">
@@ -918,7 +873,11 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
           <div class="leg" data-type="hadith"><div class="ldot" style="background:#3A9858;box-shadow:0 0 8px rgba(58,152,88,.35);"></div><div class="lb"><div class="ln">Ḥadīth</div><div class="ls">Prophetic Narration</div></div><div class="lk">Alt+2</div></div>
           <div class="leg" data-type="athar"><div class="ldot" style="background:#4878C8;box-shadow:0 0 8px rgba(72,120,200,.35);"></div><div class="lb"><div class="ln">Athar / Sharḥ</div><div class="ls">Scholar Commentary</div></div><div class="lk">Alt+3</div></div>
           <div class="leg" data-type="note"><div class="ldot" style="background:#3A5040;border:1px solid #4A6050;"></div><div class="lb"><div class="ln">Note</div><div class="ls">Personal Analysis</div></div><div class="lk">Alt+0</div></div>
-          <div class="leg" data-type="title"><div class="ldot" style="background:#FEFCF5;border:1.5px solid rgba(176,190,168,.7);"></div><div class="lb"><div class="ln">Section Title</div><div class="ls">Chapter / Part heading</div></div><div class="lk">Alt+4</div></div>
+          <div class="leg" data-type="title">
+            <div class="ldot" style="background:#FEFCF5;border:1.5px solid rgba(176,190,168,.7);box-shadow:inset 0 0 0 1px rgba(176,190,168,.3);"></div>
+            <div class="lb"><div class="ln">Section Title</div><div class="ls">Chapter / Part heading</div></div>
+            <div class="lk">Alt+4</div>
+          </div>
         </div>
         <div class="cur"><div class="cur-dot" id="cur-dot"></div><span class="cur-lbl">Active:&nbsp;</span><span class="cur-val" id="cur-val">—</span></div>
       </div>
@@ -926,28 +885,26 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
         <div class="sb-ttl">Actions</div>
         <div class="sb-btns">
           <button class="sbtn" id="btn-add"><span class="sico">＋</span> Add Block</button>
-          <button class="sbtn" id="btn-tags-sb"><span class="sico">⟐</span> Manage Sciences</button>
-          <button class="sbtn" id="btn-review-sb"><span class="sico">◎</span> Mark as Reviewed</button>
           <button class="sbtn gold" id="btn-print"><span class="sico">⎙</span> Print / Save as PDF</button>
         </div>
       </div>
       <div class="sb-sec">
         <div class="sb-ttl">Shortcuts</div>
         <div class="scts">
-          <div class="sct"><span class="sct-l">New block</span><span class="sct-k">Enter</span></div>
-          <div class="sct"><span class="sct-l">Line break</span><span class="sct-k">Shift+Enter</span></div>
-          <div class="sct"><span class="sct-l">Delete empty</span><span class="sct-k">⌫</span></div>
-          <div class="sct"><span class="sct-l">Reorder</span><span class="sct-k">Shift+↑↓</span></div>
-          <div class="sct"><span class="sct-l">→ Āyah</span><span class="sct-k">Alt+1</span></div>
-          <div class="sct"><span class="sct-l">→ Ḥadīth</span><span class="sct-k">Alt+2</span></div>
-          <div class="sct"><span class="sct-l">→ Athar</span><span class="sct-k">Alt+3</span></div>
-          <div class="sct"><span class="sct-l">→ Note</span><span class="sct-k">Alt+0</span></div>
-          <div class="sct"><span class="sct-l">→ Section Title</span><span class="sct-k">Alt+4</span></div>
+          <div class="sct"><span class="sct-l">New block</span>         <span class="sct-k">Enter</span></div>
+          <div class="sct"><span class="sct-l">Line break</span>        <span class="sct-k">Shift+Enter</span></div>
+          <div class="sct"><span class="sct-l">Delete empty</span>      <span class="sct-k">⌫</span></div>
+          <div class="sct"><span class="sct-l">Reorder</span>           <span class="sct-k">Shift+↑↓</span></div>
+          <div class="sct"><span class="sct-l">→ Āyah</span>            <span class="sct-k">Alt+1</span></div>
+          <div class="sct"><span class="sct-l">→ Ḥadīth</span>          <span class="sct-k">Alt+2</span></div>
+          <div class="sct"><span class="sct-l">→ Athar</span>           <span class="sct-k">Alt+3</span></div>
+          <div class="sct"><span class="sct-l">→ Note</span>            <span class="sct-k">Alt+0</span></div>
+          <div class="sct"><span class="sct-l">→ Section Title</span>         <span class="sct-k">Alt+4</span></div>
+          <div class="sct"><span class="sct-l">Cycle type (mouse)</span><span class="sct-k">Click ▌</span></div>
         </div>
       </div>
-      <div class="sb-foot">Alt = Option on Mac</div>
+      <div class="sb-foot">Alt = Option on Mac · بارك الله فيك</div>
     </aside>
-
     <main class="preview" id="preview">
       <div class="pages-cnt" id="pages">
         <div class="a4" data-page="1">
@@ -990,41 +947,11 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   </div>
 </div>
 
-<!-- ── MOBILE KEYBOARD TOOLBAR ── -->
-<div class="mob-kb-bar" id="mob-kb-bar">
-  <div class="mob-kb-types" id="mob-kb-types">
-    <button class="mob-kb-pill" data-type="ayah"><span class="kp-dot"></span>Āyah</button>
-    <button class="mob-kb-pill" data-type="hadith"><span class="kp-dot"></span>Ḥadīth</button>
-    <button class="mob-kb-pill" data-type="athar"><span class="kp-dot"></span>Athar</button>
-    <button class="mob-kb-pill" data-type="note"><span class="kp-dot"></span>Note</button>
-    <button class="mob-kb-pill" data-type="title"><span class="kp-dot"></span>Title</button>
-  </div>
-  <div class="mob-kb-actions">
-    <button class="mob-kb-act add" id="mob-kb-add">＋ Add Block</button>
-    <button class="mob-kb-act" id="mob-kb-up" aria-label="Move block up">↑</button>
-    <button class="mob-kb-act" id="mob-kb-down" aria-label="Move block down">↓</button>
-    <button class="mob-kb-act del" id="mob-kb-del" aria-label="Delete block">✕</button>
-  </div>
-</div>
-
-<!-- ── MOBILE SLIDE-OVER SIDEBAR ── -->
-<div class="mob-sidebar-panel" id="mob-sidebar-panel">
-  <div class="mob-sidebar-overlay" id="mob-sidebar-overlay"></div>
-  <div class="mob-sidebar-drawer" id="mob-sidebar-drawer">
-    <div class="mob-sb-head">
-      <span class="mob-sb-head-title">Document Settings</span>
-      <button class="mob-sb-close" id="mob-sb-close">✕</button>
-    </div>
-    <!-- Sidebar content cloned by JS -->
-    <div id="mob-sb-content"></div>
-  </div>
-</div>
-
-<!-- ── TAG MODAL ── -->
+<!-- ── TAG SELECTION MODAL ── -->
 <div class="tag-wrap" id="tag-modal">
   <div class="tag-box">
     <div class="tag-box-ttl">Which Islamic sciences does this document cover?</div>
-    <div class="tag-box-sub">Select all that apply — you can edit this anytime via ⟐ Sciences.</div>
+    <div class="tag-box-sub">Select all that apply — you can edit this anytime using the ⟐ Sciences button.</div>
     <div class="tag-grid" id="tag-modal-grid"></div>
     <div class="tag-box-foot">
       <button class="tag-skip" id="tag-skip">Skip for now</button>
@@ -1049,6 +976,75 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   </div>
 </div>
 
+<!-- ── MOBILE: keyboard color rail (block type + actions) ── -->
+<div id="kb-rail" aria-label="Block formatting">
+  <div class="kb-scroll" id="kb-scroll">
+    <button class="kb-type" data-type="note"   data-k><span class="kb-dot" style="background:#3A5040;border:1px solid #4A6050;"></span>Note</button>
+    <button class="kb-type" data-type="ayah"   data-k><span class="kb-dot" style="background:#D4A015;"></span>Āyah</button>
+    <button class="kb-type" data-type="hadith" data-k><span class="kb-dot" style="background:#3A9858;"></span>Ḥadīth</button>
+    <button class="kb-type" data-type="athar"  data-k><span class="kb-dot" style="background:#4878C8;"></span>Athar</button>
+    <button class="kb-type" data-type="title"  data-k><span class="kb-dot" style="background:#FEFCF5;border:1.5px solid rgba(176,190,168,.8);"></span>Title</button>
+    <span class="kb-div"></span>
+    <button class="kb-act" id="kb-add"  aria-label="Add block below">＋</button>
+    <button class="kb-act" id="kb-up"   aria-label="Move block up">↑</button>
+    <button class="kb-act" id="kb-down" aria-label="Move block down">↓</button>
+    <button class="kb-act" id="kb-del"  aria-label="Delete block">✕</button>
+    <button class="kb-act kb-done" id="kb-done" aria-label="Close keyboard">Done</button>
+  </div>
+</div>
+
+<!-- ── MOBILE: editor options sheet ── -->
+<div class="sheet-wrap" id="m-sheet-wrap">
+  <div class="sheet" id="m-sheet">
+    <div class="sheet-grip"></div>
+    <div class="sheet-title">Document options</div>
+
+    <button class="sheet-row" id="ms-review">
+      <span class="sheet-ico">◎</span>
+      <span class="sheet-lbl">Mark as reviewed<span class="sheet-sub" id="ms-review-sub">Spaced repetition</span></span>
+      <span class="sheet-chev">›</span>
+    </button>
+    <button class="sheet-row" id="ms-sciences">
+      <span class="sheet-ico">⟐</span>
+      <span class="sheet-lbl">Sciences<span class="sheet-sub" id="ms-sci-sub">Tag this document</span></span>
+      <span class="sheet-chev">›</span>
+    </button>
+
+    <div class="sheet-sec-lbl">First page layout</div>
+    <div class="seg" id="ms-pgtype">
+      <button class="seg-btn on" data-pt="chapter">Title page</button>
+      <button class="seg-btn"    data-pt="cont">Continuation</button>
+    </div>
+    <div class="sheet-pg" id="ms-pg-row" style="display:none;">
+      <span class="sheet-pg-lbl">Starting page number</span>
+      <input id="ms-pg-start" type="number" min="1" value="1" inputmode="numeric">
+    </div>
+
+    <button class="sheet-row gold" id="ms-print">
+      <span class="sheet-ico">⎙</span>
+      <span class="sheet-lbl">Print / Save as PDF<span class="sheet-sub">This document</span></span>
+      <span class="sheet-chev">›</span>
+    </button>
+    <button class="sheet-close" id="ms-close">Close</button>
+  </div>
+</div>
+
+<!-- ── MOBILE: library options sheet ── -->
+<div class="sheet-wrap" id="m-lib-wrap">
+  <div class="sheet" id="m-lib-sheet">
+    <div class="sheet-grip"></div>
+    <div class="sheet-title">Library</div>
+    <button class="sheet-row" id="ml-pdf"><span class="sheet-ico">⎙</span><span class="sheet-lbl">Export all as PDF<span class="sheet-sub">Every document</span></span><span class="sheet-chev">›</span></button>
+    <button class="sheet-row" id="ml-export"><span class="sheet-ico">⬇</span><span class="sheet-lbl">Export backup<span class="sheet-sub">Download JSON</span></span><span class="sheet-chev">›</span></button>
+    <button class="sheet-row" id="ml-import"><span class="sheet-ico">⬆</span><span class="sheet-lbl">Import backup<span class="sheet-sub">Restore from file</span></span><span class="sheet-chev">›</span></button>
+    <button class="sheet-row" id="ml-about"><span class="sheet-ico">◈</span><span class="sheet-lbl">About &amp; guide<span class="sheet-sub">How this works</span></span><span class="sheet-chev">›</span></button>
+    <button class="sheet-close" id="ml-close">Close</button>
+  </div>
+</div>
+
+<!-- ── MOBILE: new document button ── -->
+<button class="m-fab" id="m-fab" aria-label="New document">＋</button>
+
 <div class="toast" id="toast"></div>
 <div id="hk-badge"></div>
 <input type="file" id="imp-inp" accept=".json" style="display:none;">
@@ -1057,39 +1053,22 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 'use strict';
 
 /* ══════════════════════════════════
-   MOBILE DETECTION
-══════════════════════════════════ */
-const IS_MOBILE = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-  || (navigator.maxTouchPoints > 1 && window.innerWidth <= 768);
-
-function haptic(ms){
-  if(IS_MOBILE && navigator.vibrate) navigator.vibrate(ms||8);
-}
-
-/* ══════════════════════════════════
-   VIRTUAL KEYBOARD HEIGHT (iOS + Android)
-══════════════════════════════════ */
-if(window.visualViewport){
-  const onVPResize = () => {
-    const kh = Math.max(0, window.screen.height - window.visualViewport.height - window.visualViewport.offsetTop);
-    // More reliable: difference between window.innerHeight and visualViewport.height
-    const kh2 = Math.max(0, window.innerHeight - window.visualViewport.height);
-    document.documentElement.style.setProperty('--kh', Math.max(kh, kh2) + 'px');
-  };
-  window.visualViewport.addEventListener('resize', onVPResize);
-  window.visualViewport.addEventListener('scroll', onVPResize);
-}
-
-/* ══════════════════════════════════
-   PRINT FIX
+   PRINT FIX — JavaScript beforeprint
+   ──────────────────────────────────
+   position:fixed elements cause blank
+   pages in ALL browsers. We solve this
+   by cloning the A4 pages into a plain
+   body-level div before print fires,
+   and removing it after.
 ══════════════════════════════════ */
 let _printingAll = false;
 
 window.addEventListener('beforeprint', () => {
-  if(_printingAll) return;
-  document.getElementById('print-frame')?.remove();
+  if (_printingAll) return; /* all-docs export manages its own frame */
+  const existing = document.getElementById('print-frame');
+  if (existing) existing.remove();
   const src = document.getElementById('pages');
-  if(!src) return;
+  if (!src) return;
   const frame = document.createElement('div');
   frame.id = 'print-frame';
   frame.appendChild(src.cloneNode(true));
@@ -1100,201 +1079,193 @@ window.addEventListener('afterprint', () => {
   document.getElementById('print-frame')?.remove();
 });
 
+
 /* ══════════════════════════════════
    EXPORT ALL AS PDF
 ══════════════════════════════════ */
 function exportAllAsPDF(){
   const docs = DB.all();
   if(!docs.length){ showToast('No documents to export'); return; }
-  showToast('Preparing ' + docs.length + ' document' + (docs.length !== 1 ? 's' : '') + '…');
-  setTimeout(() => {
+  showToast('Preparing ' + docs.length + ' document' + (docs.length!==1?'s':'') + ' for PDF…');
+
+  setTimeout(()=>{
     document.getElementById('print-frame')?.remove();
     _printingAll = true;
-    const ORN = `<svg class="orn" viewBox="0 0 320 28" fill="none"><line x1="0" y1="14" x2="110" y2="14" stroke="#B0BEA8" stroke-width=".6"/><polygon points="124,6 132,14 124,22 116,14" fill="none" stroke="#B0BEA8" stroke-width=".75" opacity=".6"/><polygon points="160,2 174,14 160,26 146,14" fill="rgba(176,190,168,.12)" stroke="#B0BEA8" stroke-width="1"/><polygon points="196,6 204,14 196,22 188,14" fill="none" stroke="#B0BEA8" stroke-width=".75" opacity=".6"/><line x1="210" y1="14" x2="320" y2="14" stroke="#B0BEA8" stroke-width=".6"/></svg>`;
+
+    const ORN  = `<svg class="orn" viewBox="0 0 320 28" fill="none"><line x1="0" y1="14" x2="110" y2="14" stroke="#B0BEA8" stroke-width=".6"/><polygon points="124,6 132,14 124,22 116,14" fill="none" stroke="#B0BEA8" stroke-width=".75" opacity=".6"/><polygon points="160,2 174,14 160,26 146,14" fill="rgba(176,190,168,.12)" stroke="#B0BEA8" stroke-width="1"/><polygon points="196,6 204,14 196,22 188,14" fill="none" stroke="#B0BEA8" stroke-width=".75" opacity=".6"/><line x1="210" y1="14" x2="320" y2="14" stroke="#B0BEA8" stroke-width=".6"/></svg>`;
     const RULE = `<svg class="rule-svg" viewBox="0 0 666 18" fill="none"><line x1="0" y1="9" x2="302" y2="9" stroke="#B0BEA8" stroke-width=".5"/><polygon points="312,4 318,9 312,14 306,9" fill="none" stroke="#B0BEA8" stroke-width=".65" opacity=".65"/><polygon points="333,3 340,9 333,15 326,9" fill="rgba(176,190,168,.18)" stroke="#B0BEA8" stroke-width=".75"/><polygon points="354,4 360,9 354,14 348,9" fill="none" stroke="#B0BEA8" stroke-width=".65" opacity=".65"/><line x1="364" y1="9" x2="666" y2="9" stroke="#B0BEA8" stroke-width=".5"/></svg>`;
     const FOOT = `<svg class="fo" viewBox="0 0 50 12" fill="none"><line x1="0" y1="6" x2="17" y2="6" stroke="#B0BEA8" stroke-width=".55"/><polygon points="25,1 32,6 25,11 18,6" fill="rgba(176,190,168,.12)" stroke="#B0BEA8" stroke-width=".65"/><line x1="33" y1="6" x2="50" y2="6" stroke="#B0BEA8" stroke-width=".55"/></svg>`;
+
     const frame = document.createElement('div');
     frame.id = 'print-frame';
     frame.className = 'all-docs';
-    docs.forEach(doc => {
-      const w = document.createElement('div');
-      w.className = 'all-doc';
-      if(doc.pageType === 'cont'){
-        const mini = document.createElement('div'); mini.className = 'pmini';
-        const t = esc(doc.title || '');
-        mini.innerHTML = `<span>${t}</span><span class="pmh-sep" ${t ? '' : 'style="display:none"'}>·</span><span>Page ${doc.pgStart || 1}</span>`;
-        w.appendChild(mini);
+
+    docs.forEach(doc=>{
+      const wrapper = document.createElement('div');
+      wrapper.className = 'all-doc';
+
+      if(doc.pageType==='cont'){
+        const mini = document.createElement('div');
+        mini.className = 'pmini';
+        const t = esc(doc.title||'');
+        mini.innerHTML = `<span>${t}</span><span class="pmh-sep" ${t?'':'style="display:none"'}>·</span><span>Page ${doc.pgStart||1}</span>`;
+        wrapper.appendChild(mini);
       } else {
-        const head = document.createElement('header'); head.className = 'doc-head';
-        const sep = doc.author && doc.chapter ? `<span class="msep">·</span>` : '';
-        head.innerHTML = ORN + `<div class="doc-title">${esc(doc.title || '')}</div><div class="meta-row">${doc.author ? `<div class="doc-meta">${esc(doc.author)}</div>` : ''}${sep}${doc.chapter ? `<div class="doc-meta">${esc(doc.chapter)}</div>` : ''}</div>` + RULE;
-        w.appendChild(head);
+        const head = document.createElement('header');
+        head.className = 'doc-head';
+        const sep = doc.author&&doc.chapter ? `<span class="msep">·</span>` : '';
+        head.innerHTML =
+          ORN +
+          `<div class="doc-title">${esc(doc.title||'')}</div>` +
+          `<div class="meta-row">
+            ${doc.author?`<div class="doc-meta">${esc(doc.author)}</div>`:''}
+            ${sep}
+            ${doc.chapter?`<div class="doc-meta">${esc(doc.chapter)}</div>`:''}
+          </div>` +
+          RULE;
+        wrapper.appendChild(head);
       }
-      (doc.blocks || []).forEach(b => {
-        const bl = document.createElement('div'); bl.className = 'block'; bl.dataset.type = b.type;
+
+      (doc.blocks||[]).forEach(b=>{
+        const bl = document.createElement('div');
+        bl.className = 'block'; bl.dataset.type = b.type;
         const bar = document.createElement('div'); bar.className = 'bar';
-        const ed = document.createElement('div'); ed.className = 'block-text'; ed.innerHTML = b.html || '';
-        bl.append(bar, ed); w.appendChild(bl);
+        const ed  = document.createElement('div'); ed.className  = 'block-text';
+        ed.innerHTML = b.html||'';
+        bl.append(bar, ed);
+        wrapper.appendChild(bl);
       });
-      const foot = document.createElement('footer'); foot.className = 'doc-foot';
-      foot.innerHTML = `<span class="ft">${esc(doc.title || '')}</span>${FOOT}<span class="ft">Page ${doc.pgStart || 1}</span>`;
-      w.appendChild(foot);
-      frame.appendChild(w);
+
+      const foot = document.createElement('footer');
+      foot.className = 'doc-foot';
+      foot.innerHTML = `<span class="ft">${esc(doc.title||'')}</span>${FOOT}<span class="ft">Page ${doc.pgStart||1}</span>`;
+      wrapper.appendChild(foot);
+
+      frame.appendChild(wrapper);
     });
+
     document.body.appendChild(frame);
     window.print();
-  }, 80);
+  }, 60);
 }
-document.getElementById('btn-export-pdf').addEventListener('click', exportAllAsPDF);
 
+document.getElementById('btn-export-pdf').addEventListener('click', exportAllAsPDF);
 /* ══════════════════════════════════
    STORAGE
 ══════════════════════════════════ */
 const SK = 'talib-al-ilm-v3';
-const DB = {
-  all(){ try{ return JSON.parse(localStorage.getItem(SK) || '[]'); } catch(_){ return []; } },
-  get(id){ return this.all().find(d => d.id === id) || null; },
-  save(doc){
-    const a = this.all(), i = a.findIndex(d => d.id === doc.id);
-    if(i >= 0) a[i] = doc; else a.push(doc);
-    try{ localStorage.setItem(SK, JSON.stringify(a)); } catch(e){
-      showToast('⚠ Storage full — export backup now!');
+let _storageWarned=false;
+function persist(arr){
+  try{ localStorage.setItem(SK,JSON.stringify(arr)); return true; }
+  catch(err){
+    if(!_storageWarned){
+      _storageWarned=true;
+      const quota = err && (err.name==='QuotaExceededError' || err.code===22 || err.code===1014);
+      alert(quota
+        ? 'Storage is full — this note may not be saved.\n\nExport a backup, then remove a few old documents to free space.'
+        : 'Saving failed in this browser (private mode can block storage).\n\nExport a backup so your work is not lost.');
+      try{ showToast('⚠ Save failed — export a backup'); }catch(_){}
     }
-  },
-  del(id){ try{ localStorage.setItem(SK, JSON.stringify(this.all().filter(d => d.id !== id))); } catch(_){} },
+    return false;
+  }
+}
+const DB = {
+  all(){ try{ return JSON.parse(localStorage.getItem(SK)||'[]'); }catch(_){ return []; } },
+  get(id){ return this.all().find(d=>d.id===id)||null; },
+  save(doc){ const a=this.all(),i=a.findIndex(d=>d.id===doc.id); if(i>=0)a[i]=doc; else a.push(doc); return persist(a); },
+  del(id){ return persist(this.all().filter(d=>d.id!==id)); },
   newDoc(){
-    return {
-      id: 'doc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-      title: '', author: '', chapter: '', pageType: 'chapter', pgStart: 1,
-      blocks: [], tags: [], tagsAsked: false,
-      createdAt: Date.now(), updatedAt: Date.now(),
-      sr: { interval: 1, easeFactor: 2.5, repetitions: 0, nextReview: null, lastReview: null }
-    };
+    return { id:'doc_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+      title:'',author:'',chapter:'',pageType:'chapter',pgStart:1,
+      blocks:[],tags:[],tagsAsked:false,createdAt:Date.now(),updatedAt:Date.now(),
+      sr:{interval:1,easeFactor:2.5,repetitions:0,nextReview:null,lastReview:null} };
   }
 };
 
 /* ══════════════════════════════════
-   SM-2 ALGORITHM
+   SM-2 (fixed: all 4 ratings give
+   meaningfully different intervals)
 ══════════════════════════════════ */
 const SM2 = {
-  schedule(sr, q){
-    let { interval, easeFactor, repetitions } = { ...sr };
-    if(q < 3){
-      repetitions = 0; interval = 1;
-      easeFactor = Math.max(1.3, easeFactor - 0.2);
+  schedule(sr, q) {
+    let {interval,easeFactor,repetitions}={...sr};
+    if(q<3){
+      repetitions=0; interval=1;
+      easeFactor=Math.max(1.3,easeFactor-0.2);
     } else {
-      if(repetitions === 0)      interval = q === 5 ? 7  : q === 4 ? 3 : 1;
-      else if(repetitions === 1) interval = q === 5 ? 14 : q === 4 ? 7 : 3;
+      if(repetitions===0)      interval=q===5?7:q===4?3:1;
+      else if(repetitions===1) interval=q===5?14:q===4?7:3;
       else {
-        interval = Math.round(interval * easeFactor);
-        if(q === 5) interval = Math.round(interval * 1.1);
-        if(q === 3) interval = Math.max(1, Math.round(interval * 0.6));
+        interval=Math.round(interval*easeFactor);
+        if(q===5)interval=Math.round(interval*1.1);
+        if(q===3)interval=Math.max(1,Math.round(interval*0.6));
       }
       repetitions++;
-      easeFactor = Math.max(1.3, easeFactor + 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+      easeFactor=Math.max(1.3,easeFactor+0.1-(5-q)*(0.08+(5-q)*0.02));
     }
-    return { interval, easeFactor, repetitions,
-      nextReview: Date.now() + interval * 86400000, lastReview: Date.now() };
+    return {interval,easeFactor,repetitions,nextReview:Date.now()+interval*86400000,lastReview:Date.now()};
   },
   status(sr){
-    if(!sr || !sr.nextReview) return 'new';
-    const d = (sr.nextReview - Date.now()) / 86400000;
-    return d < 0 ? 'over' : d < 1 ? 'due' : 'ok';
+    if(!sr.nextReview) return 'new';
+    const d=(sr.nextReview-Date.now())/86400000;
+    return d<0?'over':d<1?'due':'ok';
   },
   label(sr){
-    if(!sr || !sr.nextReview) return 'Never reviewed';
-    const d = (sr.nextReview - Date.now()) / 86400000;
-    if(d < 0) return Math.abs(Math.round(d)) + 'd overdue';
-    if(d < 1) return 'Due today';
-    if(d < 2) return 'Due tomorrow';
-    return 'In ' + Math.round(d) + ' days';
+    if(!sr.nextReview) return 'Never reviewed';
+    const d=(sr.nextReview-Date.now())/86400000;
+    if(d<0) return Math.abs(Math.round(d))+'d overdue';
+    if(d<1) return 'Due today';
+    if(d<2) return 'Due tomorrow';
+    return 'In '+Math.round(d)+' days';
   },
   fmt(days){
-    if(days <= 0) return 'Today';
-    if(days === 1) return 'Tomorrow';
-    if(days < 14)  return 'In ' + days + ' days';
-    if(days < 60)  return 'In ' + Math.round(days / 7) + ' weeks';
-    return 'In ' + Math.round(days / 30) + ' months';
+    if(days<=0) return 'Today';
+    if(days===1) return 'Tomorrow';
+    if(days<14)  return 'In '+days+' days';
+    if(days<60)  return 'In '+Math.round(days/7)+' weeks';
+    return 'In '+Math.round(days/30)+' months';
   }
 };
 
 /* ══════════════════════════════════
    STATE
 ══════════════════════════════════ */
-let currentDocId = null, reviewDocId = null;
-let saveTimer = null, saveState = 'saved';
+let currentDocId=null, reviewDocId=null, saveTimer=null;
 
 /* ══════════════════════════════════
    ONBOARDING
 ══════════════════════════════════ */
-const obWrap = document.getElementById('ob-wrap');
-document.getElementById('ob-start').addEventListener('click', () => {
-  haptic(10);
-  obWrap.classList.add('off');
-  localStorage.setItem('talib-welcomed', '1');
-  showLibrary();
+const obWrap=document.getElementById('ob-wrap');
+document.getElementById('ob-start').addEventListener('click',()=>{
+  obWrap.classList.add('off'); localStorage.setItem('talib-welcomed','1'); showLibrary();
 });
-document.getElementById('btn-about').addEventListener('click', () => {
-  haptic(8);
-  obWrap.classList.remove('off');
-});
-if(localStorage.getItem('talib-ls-dismissed')){
-  document.getElementById('ls-warn').style.display = 'none';
-}
-document.getElementById('ls-close').addEventListener('click', () => {
-  document.getElementById('ls-warn').style.display = 'none';
-  localStorage.setItem('talib-ls-dismissed', '1');
-});
+document.getElementById('btn-about').addEventListener('click',()=>obWrap.classList.remove('off'));
+
+if(localStorage.getItem('talib-ls-dismissed')) document.getElementById('ls-warn').style.display='none';
+document.getElementById('ls-close').addEventListener('click',()=>{ document.getElementById('ls-warn').style.display='none'; localStorage.setItem('talib-ls-dismissed','1'); });
 
 /* ══════════════════════════════════
    VIEW SWITCHING
 ══════════════════════════════════ */
-function showLibrary(){
-  document.getElementById('edt').classList.add('off');
-  document.getElementById('lib').classList.remove('off');
-  renderLibrary();
-}
-function showEditor(id){
-  currentDocId = id;
-  loadDoc(id);
-  document.getElementById('lib').classList.add('off');
-  document.getElementById('edt').classList.remove('off');
-}
+function showLibrary(){ document.getElementById('edt').classList.add('off'); document.getElementById('lib').classList.remove('off'); renderLibrary(); }
+function showEditor(id){ currentDocId=id; loadDoc(id); document.getElementById('lib').classList.add('off'); document.getElementById('edt').classList.remove('off'); }
 
 /* ══════════════════════════════════
-   LIBRARY RENDER
+   LIBRARY
 ══════════════════════════════════ */
-let libQuery = '';
-document.getElementById('lib-search').addEventListener('input', e => {
-  libQuery = e.target.value.trim().toLowerCase();
-  renderLibrary();
-});
-
 function renderLibrary(){
-  const ORD = { over: 0, due: 1, new: 2, ok: 3 };
-  const sortFn = (a, b) => {
-    const sa = SM2.status(a.sr), sb = SM2.status(b.sr);
-    if(ORD[sa] !== ORD[sb]) return ORD[sa] - ORD[sb];
-    if(sa === 'ok' && sb === 'ok') return a.sr.nextReview - b.sr.nextReview;
-    return b.updatedAt - a.updatedAt;
+  const ORD={over:0,due:1,new:2,ok:3};
+  const sortFn=(a,b)=>{
+    const sa=SM2.status(a.sr),sb=SM2.status(b.sr);
+    if(ORD[sa]!==ORD[sb]) return ORD[sa]-ORD[sb];
+    if(sa==='ok'&&sb==='ok') return a.sr.nextReview-b.sr.nextReview;
+    return b.updatedAt-a.updatedAt;
   };
-  let all = DB.all();
+  const all=DB.all();
+  const body=document.getElementById('lib-body'); body.innerHTML='';
 
-  // Apply search filter
-  if(libQuery){
-    all = all.filter(d => {
-      const hay = [d.title, d.author, d.chapter, ...(d.tags || []).map(t => {
-        const s = SCIENCES.find(x => x.id === t); return s ? s.label : '';
-      })].join(' ').toLowerCase();
-      return hay.includes(libQuery);
-    });
-  }
-
-  const body = document.getElementById('lib-body');
-  body.innerHTML = '';
-
-  if(!DB.all().length){
-    body.innerHTML = `<div class="empty-state">
+  if(!all.length){
+    body.innerHTML=`<div class="empty-state">
       <svg class="empty-icon" width="120" height="80" viewBox="0 0 120 80" fill="none">
         <rect x="15" y="8" width="90" height="64" rx="3" stroke="#243628" stroke-width="1.5"/>
         <line x1="60" y1="8" x2="60" y2="72" stroke="#243628" stroke-width="1.5"/>
@@ -1312,754 +1283,417 @@ function renderLibrary(){
     return;
   }
 
-  if(libQuery && !all.length){
-    body.innerHTML = `<div class="no-results">No documents matching "<strong style="color:var(--st)">${esc(libQuery)}</strong>"</div>`;
-    return;
-  }
-
-  // Due for review section
-  const due = all.filter(d => ['over', 'due'].includes(SM2.status(d.sr)));
+  /* ── Due for Review banner (cross-science) ── */
+  const due=all.filter(d=>['over','due'].includes(SM2.status(d.sr)));
   if(due.length){
-    const sec = document.createElement('div'); sec.className = 'due-sec';
-    sec.innerHTML = `<div class="sec-lbl"><span class="due-dot"></span>Due for Review <span class="sec-count">(${due.length})</span></div>`;
-    const g = document.createElement('div'); g.className = 'cards-grid';
-    [...due].sort(sortFn).forEach(d => g.appendChild(mkCard(d)));
+    const sec=document.createElement('div'); sec.className='due-sec';
+    sec.innerHTML=`<div class="sec-lbl"><span class="due-dot"></span>Due for Review <span class="sec-count">(${due.length})</span></div>`;
+    const g=document.createElement('div'); g.className='cards-grid';
+    [...due].sort(sortFn).forEach(d=>g.appendChild(mkCard(d)));
     sec.appendChild(g); body.appendChild(sec);
   }
 
-  // Group by Islamic science
-  const byScience = {}, untagged = [];
-  all.forEach(doc => {
-    const tags = (doc.tags || []).filter(id => SCIENCES.find(s => s.id === id));
+  /* ── Group documents by Islamic science ── */
+  const byScience={}; // scienceId -> Set of doc ids (avoid duplicates per section)
+  const untagged=[];
+  all.forEach(doc=>{
+    const tags=(doc.tags||[]).filter(id=>SCIENCES.find(s=>s.id===id));
     if(!tags.length){ untagged.push(doc); return; }
-    tags.forEach(id => {
-      if(!byScience[id]) byScience[id] = [];
+    tags.forEach(id=>{
+      if(!byScience[id]) byScience[id]=[];
       byScience[id].push(doc);
     });
   });
-  SCIENCES.forEach(sci => {
-    const docs = byScience[sci.id]; if(!docs || !docs.length) return;
-    const sec = document.createElement('div'); sec.className = 'sci-sec';
-    sec.innerHTML = `<div class="sec-lbl">${sci.label}<span class="sec-count"> (${docs.length})</span></div>`;
-    const g = document.createElement('div'); g.className = 'cards-grid';
-    [...docs].sort(sortFn).forEach(d => g.appendChild(mkCard(d)));
+
+  /* Render in canonical SCIENCES order */
+  SCIENCES.forEach(sci=>{
+    const docs=byScience[sci.id]; if(!docs||!docs.length) return;
+    const sec=document.createElement('div'); sec.className='sci-sec';
+    sec.innerHTML=`<div class="sec-lbl">${sci.label}<span class="sec-count"> (${docs.length})</span></div>`;
+    const g=document.createElement('div'); g.className='cards-grid';
+    [...docs].sort(sortFn).forEach(d=>g.appendChild(mkCard(d)));
     sec.appendChild(g); body.appendChild(sec);
   });
+
+  /* Untagged fallback section */
   if(untagged.length){
-    const sec = document.createElement('div'); sec.className = 'sci-sec';
-    sec.innerHTML = `<div class="sec-lbl">Untagged<span class="sec-count"> (${untagged.length})</span></div>`;
-    const g = document.createElement('div'); g.className = 'cards-grid';
-    [...untagged].sort(sortFn).forEach(d => g.appendChild(mkCard(d)));
+    const sec=document.createElement('div'); sec.className='sci-sec';
+    sec.innerHTML=`<div class="sec-lbl">Untagged<span class="sec-count"> (${untagged.length})</span></div>`;
+    const g=document.createElement('div'); g.className='cards-grid';
+    [...untagged].sort(sortFn).forEach(d=>g.appendChild(mkCard(d)));
     sec.appendChild(g); body.appendChild(sec);
   }
 }
 
 function mkCard(doc){
-  const status = SM2.status(doc.sr), card = document.createElement('div');
-  card.className = 'doc-card' + (status === 'due' ? ' c-due' : status === 'over' ? ' c-over' : '');
-  const bar = document.createElement('div'); bar.className = 'card-bar';
-  const cnt = { ayah: 0, hadith: 0, athar: 0, note: 0 };
-  (doc.blocks || []).forEach(b => cnt[b.type] = (cnt[b.type] || 0) + 1);
-  const total = doc.blocks.length || 1;
-  const cols = { ayah: '#D4A015', hadith: '#3A9858', athar: '#4878C8', note: '#1A2B1E' };
-  ['ayah', 'hadith', 'athar', 'note'].forEach(t => {
-    if(!cnt[t]) return;
-    const seg = document.createElement('div'); seg.className = 'card-bar-seg';
-    seg.style.background = cols[t]; seg.style.flex = String(cnt[t] / total);
-    bar.appendChild(seg);
-  });
-  if(!doc.blocks.length){
-    const seg = document.createElement('div'); seg.className = 'card-bar-seg';
-    seg.style.background = '#1A2B1E'; seg.style.flex = '1'; bar.appendChild(seg);
-  }
+  const status=SM2.status(doc.sr), card=document.createElement('div');
+  card.className='doc-card'+(status==='due'?' c-due':status==='over'?' c-over':'');
+  const bar=document.createElement('div'); bar.className='card-bar';
+  const cnt={ayah:0,hadith:0,athar:0,note:0};
+  doc.blocks.forEach(b=>cnt[b.type]=(cnt[b.type]||0)+1);
+  const total=doc.blocks.length||1;
+  const cols={ayah:'#D4A015',hadith:'#3A9858',athar:'#4878C8',note:'#1A2B1E'};
+  ['ayah','hadith','athar','note'].forEach(t=>{ if(!cnt[t]) return; const seg=document.createElement('div'); seg.className='card-bar-seg'; seg.style.background=cols[t]; seg.style.flex=String(cnt[t]/total); bar.appendChild(seg); });
+  if(!doc.blocks.length){ const seg=document.createElement('div'); seg.className='card-bar-seg'; seg.style.background='#1A2B1E'; seg.style.flex='1'; bar.appendChild(seg); }
   card.appendChild(bar);
-  const bi = { new: 'b-new', due: 'b-due', over: 'b-over', ok: 'b-ok' };
-  const icon = { new: '◈', due: '◉', over: '⊗', ok: '✓' };
-  const tagHTML = (doc.tags || []).map(id => {
-    const s = SCIENCES.find(x => x.id === id); return s ? `<span class="ctag">${s.label}</span>` : '';
-  }).join('');
-  const tagsRow = tagHTML ? `<div class="card-tags">${tagHTML}</div>` : '';
-  card.insertAdjacentHTML('beforeend', `
-    <div class="card-body">
-      <div class="card-title ${!doc.title ? 'no-tit' : ''}">${esc(doc.title) || 'Untitled Document'}</div>
-      <div class="card-author">${esc(doc.author) || '&nbsp;'}</div>
-      ${tagsRow}
-      <div class="card-meta">${doc.chapter ? esc(doc.chapter) + ' · ' : ''}${(doc.blocks || []).length} block${(doc.blocks || []).length !== 1 ? 's' : ''} · ${tAgo(doc.updatedAt)}</div>
-      <span class="sr-badge ${bi[status]}">${icon[status]} ${SM2.label(doc.sr)}</span>
-    </div>
-    <div class="card-foot">
-      <button class="card-open" data-id="${doc.id}">Open ↗</button>
-      <button class="card-del" data-id="${doc.id}" title="Delete">✕</button>
-    </div>`);
-  card.querySelector('.card-open').addEventListener('click', e => { e.stopPropagation(); haptic(8); showEditor(doc.id); });
-  card.querySelector('.card-del').addEventListener('click', e => { e.stopPropagation(); haptic(12); delPrompt(doc.id, doc.title); });
-  card.addEventListener('click', () => { haptic(8); showEditor(doc.id); });
+  const bi={new:'b-new',due:'b-due',over:'b-over',ok:'b-ok'}, icon={new:'◈',due:'◉',over:'⊗',ok:'✓'};
+  const tagHTML=(doc.tags||[]).map(id=>{ const s=SCIENCES.find(x=>x.id===id); return s?`<span class="ctag">${s.label}</span>`:''; }).join('');
+  const tagsRow=tagHTML?`<div class="card-tags">${tagHTML}</div>`:'';
+  card.insertAdjacentHTML('beforeend',`<div class="card-body"><div class="card-title ${!doc.title?'no-tit':''}">${esc(doc.title)||'Untitled Document'}</div><div class="card-author">${esc(doc.author)||'&nbsp;'}</div>${tagsRow}<div class="card-meta">${doc.chapter?esc(doc.chapter)+' · ':''}${doc.blocks.length} block${doc.blocks.length!==1?'s':''} · ${tAgo(doc.updatedAt)}</div><span class="sr-badge ${bi[status]}">${icon[status]} ${SM2.label(doc.sr)}</span></div><div class="card-foot"><button class="card-open" data-id="${doc.id}">Open ↗</button><button class="card-del" data-id="${doc.id}" title="Delete">✕</button></div>`);
+  card.querySelector('.card-open').addEventListener('click',e=>{e.stopPropagation();showEditor(doc.id);});
+  card.querySelector('.card-del').addEventListener('click', e=>{e.stopPropagation();delPrompt(doc.id,doc.title);});
+  card.addEventListener('click',()=>showEditor(doc.id));
   return card;
 }
-
-function delPrompt(id, title){
-  if(confirm(`Delete "${title || 'Untitled Document'}"?\nThis cannot be undone.`)){
-    DB.del(id); showToast('Document deleted'); renderLibrary();
-  }
-}
-function tAgo(ts){
-  const s = (Date.now() - ts) / 1000;
-  if(s < 60) return 'Just now';
-  if(s < 3600) return Math.floor(s / 60) + 'm ago';
-  if(s < 86400) return Math.floor(s / 3600) + 'h ago';
-  if(s < 604800) return Math.floor(s / 86400) + 'd ago';
-  return new Date(ts).toLocaleDateString();
-}
-function esc(s){ return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function delPrompt(id,title){ if(confirm(`Delete "${title||'Untitled Document'}"?\nThis cannot be undone.`)){ DB.del(id); showToast('Document deleted'); renderLibrary(); } }
+function tAgo(ts){ const s=(Date.now()-ts)/1000; if(s<60) return 'Just now'; if(s<3600) return Math.floor(s/60)+'m ago'; if(s<86400) return Math.floor(s/3600)+'h ago'; if(s<604800) return Math.floor(s/86400)+'d ago'; return new Date(ts).toLocaleDateString(); }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 /* ══════════════════════════════════
    EXPORT / IMPORT
 ══════════════════════════════════ */
-function doExport(){
-  const docs = DB.all(); if(!docs.length){ showToast('No documents to export'); return; }
-  const blob = new Blob([JSON.stringify(docs, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob), a = document.createElement('a');
-  a.href = url; a.download = 'talib-backup-' + new Date().toISOString().split('T')[0] + '.json';
-  a.click(); URL.revokeObjectURL(url);
-  showToast('Backup exported — keep this file safe!');
-}
-const impInp = document.getElementById('imp-inp');
-function doImport(){ impInp.click(); }
-
-document.getElementById('btn-export').addEventListener('click', doExport);
-document.getElementById('btn-import').addEventListener('click', doImport);
-document.getElementById('mob-btn-export').addEventListener('click', doExport);
-document.getElementById('mob-btn-import').addEventListener('click', doImport);
-document.getElementById('mob-btn-about').addEventListener('click', () => obWrap.classList.remove('off'));
-document.getElementById('mob-btn-new').addEventListener('click', () => { haptic(10); newDoc(); });
-
-impInp.addEventListener('change', e => {
-  const file = e.target.files[0]; if(!file) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    try{
-      const docs = JSON.parse(ev.target.result);
-      if(!Array.isArray(docs)) throw new Error('Not an array');
-      const ex = new Set(DB.all().map(d => d.id));
-      let added = 0;
-      docs.forEach(d => { if(d.id && d.blocks !== undefined && !ex.has(d.id)){ DB.save(d); added++; } });
-      showToast(`Imported ${added} document${added !== 1 ? 's' : ''}`);
-      renderLibrary();
-    } catch(_){ alert('Invalid backup file. Use a file exported from this app.'); }
-  };
-  r.readAsText(file); impInp.value = '';
+document.getElementById('btn-export').addEventListener('click',()=>{
+  const docs=DB.all(); if(!docs.length){showToast('No documents to export');return;}
+  const blob=new Blob([JSON.stringify(docs,null,2)],{type:'application/json'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='talib-backup-'+new Date().toISOString().split('T')[0]+'.json'; a.click(); URL.revokeObjectURL(url);
+  showToast('Backup exported — keep this file safe');
+});
+const impInp=document.getElementById('imp-inp');
+document.getElementById('btn-import').addEventListener('click',()=>impInp.click());
+impInp.addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const r=new FileReader(); r.onload=ev=>{ try{ const docs=JSON.parse(ev.target.result); if(!Array.isArray(docs)) throw 0; const ex=new Set(DB.all().map(d=>d.id)); let added=0; docs.forEach(d=>{ if(d.id&&d.blocks!==undefined&&!ex.has(d.id)){DB.save(d);added++;} }); showToast(`Imported ${added} document${added!==1?'s':''}`); renderLibrary(); }catch(_){ alert('Invalid backup file. Use a file exported from this app.'); } }; r.readAsText(file); impInp.value='';
 });
 
 /* ══════════════════════════════════
    NEW DOCUMENT
 ══════════════════════════════════ */
-function newDoc(){ const d = DB.newDoc(); DB.save(d); showEditor(d.id); }
-document.getElementById('btn-new-doc').addEventListener('click', () => { haptic(10); newDoc(); });
+function newDoc(){ const d=DB.newDoc(); DB.save(d); showEditor(d.id); }
+document.getElementById('btn-new-doc').addEventListener('click',newDoc);
 
 /* ══════════════════════════════════
    DOM REFS
 ══════════════════════════════════ */
-const gT = el => el.textContent.trim();
-const sT = (el, v) => { if(el.textContent !== v) el.textContent = v; };
-const dTitle  = document.getElementById('doc-title');
-const dAuthor = document.getElementById('doc-author');
-const dChap   = document.getElementById('doc-chapter');
-const mSep    = document.getElementById('meta-sep');
-const iTitle  = document.getElementById('i-title');
-const iAuthor = document.getElementById('i-author');
-const iChap   = document.getElementById('i-chapter');
-const toastEl = document.getElementById('toast');
-const cDot    = document.getElementById('cur-dot');
-const cVal    = document.getElementById('cur-val');
-const pages   = document.getElementById('pages');
-const badge   = document.getElementById('hk-badge');
-
-// Unified paste handler for contenteditable fields
-function onPaste(e){
-  e.preventDefault();
-  const text = (e.clipboardData || window.clipboardData).getData('text/plain');
-  // Use insertText if available, otherwise fallback
-  if(document.queryCommandSupported && document.queryCommandSupported('insertText')){
-    document.execCommand('insertText', false, text);
-  } else {
-    const sel = window.getSelection();
-    if(sel && sel.rangeCount){
-      sel.deleteFromDocument();
-      sel.getRangeAt(0).insertNode(document.createTextNode(text));
-      sel.collapseToEnd();
-    }
-  }
-}
-[dTitle, dAuthor, dChap].forEach(el => {
-  el.addEventListener('paste', onPaste);
-  el.addEventListener('keydown', e => { if(e.key === 'Enter') e.preventDefault(); });
-});
+const gT=el=>el.textContent.trim(), sT=(el,v)=>{ if(el.textContent!==v) el.textContent=v; };
+const dTitle=document.getElementById('doc-title'), dAuthor=document.getElementById('doc-author'), dChap=document.getElementById('doc-chapter');
+const mSep=document.getElementById('meta-sep'), iTitle=document.getElementById('i-title'), iAuthor=document.getElementById('i-author'), iChap=document.getElementById('i-chapter');
+const toastEl=document.getElementById('toast'), cDot=document.getElementById('cur-dot'), cVal=document.getElementById('cur-val');
+const pages=document.getElementById('pages'), badge=document.getElementById('hk-badge');
+[dTitle,dAuthor,dChap].forEach(el=>{ el.addEventListener('paste',e=>{e.preventDefault();document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text/plain'));}); el.addEventListener('keydown',e=>{if(e.key==='Enter')e.preventDefault();}); });
 
 /* ══════════════════════════════════
-   SYNC FUNCTIONS
+   SYNC
 ══════════════════════════════════ */
-function syncMeta(){
-  const t = gT(dTitle);
-  document.querySelectorAll('.pft').forEach(el => el.textContent = t);
-  document.querySelectorAll('.pmh').forEach(el => el.textContent = t);
-  document.querySelectorAll('.pmh-sep').forEach(el => el.style.display = t ? '' : 'none');
-  const n = document.getElementById('edt-name');
-  if(n) n.textContent = t || 'Untitled';
-}
-function syncSep(){
-  mSep.style.display = (gT(dAuthor) && gT(dChap)) ? '' : 'none';
-}
-function syncLabels(){
-  document.querySelectorAll('.a4').forEach(a => {
-    const n = parseInt(a.dataset.page);
-    a.querySelectorAll('.pg-lbl').forEach(el => el.textContent = pgLbl(n));
-  });
-}
+function syncMeta(){ const t=gT(dTitle); document.querySelectorAll('.pft').forEach(el=>el.textContent=t); document.querySelectorAll('.pmh').forEach(el=>el.textContent=t); document.querySelectorAll('.pmh-sep').forEach(el=>el.style.display=t?'':'none'); const n=document.getElementById('edt-name'); if(n) n.textContent=t||'Untitled'; }
+function syncSep(){ mSep.style.display=(gT(dAuthor)&&gT(dChap))?'':'none'; }
+function syncLabels(){ document.querySelectorAll('.a4').forEach(a=>{ const n=parseInt(a.dataset.page); a.querySelectorAll('.pg-lbl').forEach(el=>el.textContent=pgLbl(n)); }); }
+iTitle.addEventListener('input', ()=>{ sT(dTitle, iTitle.value);  syncMeta(); scheduleSave(); });
+iAuthor.addEventListener('input',()=>{ sT(dAuthor,iAuthor.value); syncSep();  scheduleSave(); });
+iChap.addEventListener('input',  ()=>{ sT(dChap,  iChap.value);   syncSep();  scheduleSave(); });
+dTitle.addEventListener('input', ()=>{ iTitle.value  =gT(dTitle);  syncMeta(); scheduleSave(); });
+dAuthor.addEventListener('input',()=>{ iAuthor.value =gT(dAuthor); syncSep();  scheduleSave(); });
+dChap.addEventListener('input',  ()=>{ iChap.value   =gT(dChap);   syncSep();  scheduleSave(); });
 
-iTitle.addEventListener('input',  () => { sT(dTitle,  iTitle.value);  syncMeta(); scheduleSave(); });
-iAuthor.addEventListener('input', () => { sT(dAuthor, iAuthor.value); syncSep();  scheduleSave(); });
-iChap.addEventListener('input',   () => { sT(dChap,   iChap.value);   syncSep();  scheduleSave(); });
-dTitle.addEventListener('input',  () => { iTitle.value  = gT(dTitle);  syncMeta(); scheduleSave(); });
-dAuthor.addEventListener('input', () => { iAuthor.value = gT(dAuthor); syncSep();  scheduleSave(); });
-dChap.addEventListener('input',   () => { iChap.value   = gT(dChap);   syncSep();  scheduleSave(); });
-
-let pgType = 'chapter', pgStart = 1;
-const pgLbl = n => pgType === 'cont' ? 'Page ' + (pgStart + n - 1) : 'Page ' + n;
-
-document.querySelectorAll('.pgt').forEach(b => b.addEventListener('click', () => {
-  pgType = b.dataset.pt;
-  document.querySelectorAll('.pgt').forEach(x => x.classList.remove('on'));
-  b.classList.add('on');
-  document.getElementById('pg-row').style.display = pgType === 'cont' ? '' : 'none';
-  document.querySelector('.a4[data-page="1"]').classList.toggle('cont', pgType === 'cont');
-  syncLabels(); layoutSched(); scheduleSave();
-}));
-document.getElementById('pg-start').addEventListener('input', e => {
-  pgStart = Math.max(1, parseInt(e.target.value) || 1);
-  document.getElementById('pg-prev').textContent = 'Page ' + pgStart;
-  syncLabels(); scheduleSave();
-});
+let pgType='chapter',pgStart=1;
+const pgLbl=n=>pgType==='cont'?'Page '+(pgStart+n-1):'Page '+n;
+function applyPageType(t){
+  pgType=t;
+  document.querySelectorAll('.pgt').forEach(x=>x.classList.toggle('on',x.dataset.pt===t));
+  document.getElementById('pg-row').style.display=t==='cont'?'':'none';
+  document.querySelector('.a4[data-page="1"]').classList.toggle('cont',t==='cont');
+  syncLabels(); layoutSched(); scheduleSave(); syncMobilePageUI();
+}
+function applyPageStart(n){
+  pgStart=Math.max(1,parseInt(n)||1);
+  document.getElementById('pg-start').value=pgStart;
+  document.getElementById('pg-prev').textContent='Page '+pgStart;
+  syncLabels(); scheduleSave(); syncMobilePageUI();
+}
+document.querySelectorAll('.pgt').forEach(b=>b.addEventListener('click',()=>applyPageType(b.dataset.pt)));
+document.getElementById('pg-start').addEventListener('input',e=>applyPageStart(e.target.value));
 
 /* ══════════════════════════════════
    LOAD / SAVE
 ══════════════════════════════════ */
 function loadDoc(id){
-  const doc = DB.get(id); if(!doc){ showLibrary(); return; }
-  document.querySelectorAll('.page-body').forEach(pb => pb.innerHTML = '');
-  [...pages.querySelectorAll('.a4')].slice(1).forEach(p => p.remove());
-  focused = null; clearInd(); setLeg(null);
-  sT(dTitle,  doc.title  || ''); iTitle.value  = doc.title  || '';
-  sT(dAuthor, doc.author || ''); iAuthor.value = doc.author || '';
-  sT(dChap,   doc.chapter|| ''); iChap.value   = doc.chapter|| '';
-  pgType   = doc.pageType || 'chapter';
-  pgStart  = doc.pgStart  || 1;
-  document.querySelectorAll('.pgt').forEach(b => b.classList.toggle('on', b.dataset.pt === pgType));
-  document.querySelector('.a4[data-page="1"]').classList.toggle('cont', pgType === 'cont');
-  document.getElementById('pg-row').style.display = pgType === 'cont' ? '' : 'none';
-  document.getElementById('pg-start').value = pgStart;
-  document.getElementById('pg-prev').textContent = 'Page ' + pgStart;
-  (doc.blocks || []).forEach(bd => {
-    const b = mkBlock(bd.type); b.dataset.blockId = bd.id;
-    b.querySelector('.block-text').innerHTML = bd.html || '';
-    lastBody().appendChild(b);
-  });
-  updateTagsButton(doc.tags || []);
+  const doc=DB.get(id); if(!doc){showLibrary();return;}
+  document.querySelectorAll('.page-body').forEach(pb=>pb.innerHTML='');
+  [...pages.querySelectorAll('.a4')].slice(1).forEach(p=>p.remove());
+  focused=null; clearInd(); setLeg(null);
+  sT(dTitle,doc.title||'');   iTitle.value  =doc.title||'';
+  sT(dAuthor,doc.author||''); iAuthor.value =doc.author||'';
+  sT(dChap,doc.chapter||'');  iChap.value   =doc.chapter||'';
+  pgType=doc.pageType||'chapter'; pgStart=doc.pgStart||1;
+  document.querySelectorAll('.pgt').forEach(b=>b.classList.toggle('on',b.dataset.pt===pgType));
+  document.querySelector('.a4[data-page="1"]').classList.toggle('cont',pgType==='cont');
+  document.getElementById('pg-row').style.display=pgType==='cont'?'':'none';
+  document.getElementById('pg-start').value=pgStart;
+  document.getElementById('pg-prev').textContent='Page '+pgStart;
+  (doc.blocks||[]).forEach(bd=>{ const b=mkBlock(bd.type); b.dataset.blockId=bd.id; b.querySelector('.block-text').innerHTML=bd.html||''; lastBody().appendChild(b); });
+  updateTagsButton(doc.tags||[]);
   syncMeta(); syncSep(); syncLabels(); layoutSched();
-  const b1 = document.getElementById('body-1');
-  if(b1) b1.classList.toggle('empty', b1.querySelectorAll('.block').length === 0);
-  updateEditorBar(doc); setSaveState('saved');
+  const b1=document.getElementById('body-1'); if(b1) b1.classList.toggle('empty',b1.querySelectorAll('.block').length===0);
+  updateEditorBar(doc); setSaveState('saved'); syncMobilePageUI();
 }
-
 function saveCurrentDoc(){
   if(!currentDocId) return;
-  const doc = DB.get(currentDocId) || DB.newDoc();
-  doc.id       = currentDocId;
-  doc.title    = gT(dTitle);
-  doc.author   = gT(dAuthor);
-  doc.chapter  = gT(dChap);
-  doc.pageType = pgType;
-  doc.pgStart  = pgStart;
-  doc.updatedAt = Date.now();
-  doc.blocks = [];
-  allBlocks().forEach((b, i) => doc.blocks.push({
-    id: b.dataset.blockId || ('blk_' + i),
-    type: b.dataset.type,
-    html: b.querySelector('.block-text').innerHTML
-  }));
-  DB.save(doc);
-  setSaveState('saved');
-  updateEditorBar(doc);
+  const doc=DB.get(currentDocId)||DB.newDoc();
+  doc.id=currentDocId; doc.title=gT(dTitle); doc.author=gT(dAuthor); doc.chapter=gT(dChap);
+  doc.pageType=pgType; doc.pgStart=pgStart; doc.updatedAt=Date.now(); doc.blocks=[];
+  allBlocks().forEach((b,i)=>doc.blocks.push({id:b.dataset.blockId||('blk_'+i),type:b.dataset.type,html:b.querySelector('.block-text').innerHTML}));
+  DB.save(doc); setSaveState('saved'); updateEditorBar(doc);
 }
-
-function scheduleSave(){
-  setSaveState('saving');
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveCurrentDoc, 1200);
-}
-
-function setSaveState(s){
-  saveState = s;
-  const p = document.getElementById('save-pill'), l = document.getElementById('save-lbl');
-  p.className = 'save-pill ' + s;
-  l.textContent = s === 'saving' ? 'Saving…' : s === 'saved' ? 'Saved' : 'Unsaved';
-}
-
-function updateEditorBar(doc, lastQuality = null){
-  document.getElementById('edt-name').textContent = doc.title || 'Untitled';
-  const status = SM2.status(doc.sr);
-  const btn = document.getElementById('btn-review');
-  const lbl = document.getElementById('review-lbl');
-  btn.className = 'btn-review';
-  if(lastQuality !== null){
-    const icons = { 0: '○', 3: '◐', 4: '●', 5: '✓' };
-    lbl.textContent = (icons[lastQuality] || '◎') + ' Reviewed  ·  ' + SM2.label(doc.sr);
+function scheduleSave(){ setSaveState('saving'); clearTimeout(saveTimer); saveTimer=setTimeout(saveCurrentDoc,1200); }
+function setSaveState(s){ const p=document.getElementById('save-pill'),l=document.getElementById('save-lbl'); p.className='save-pill '+s; l.textContent=s==='saving'?'Saving…':s==='saved'?'Saved':'Unsaved'; }
+function updateEditorBar(doc, lastQuality=null){
+  document.getElementById('edt-name').textContent=doc.title||'Untitled';
+  const status=SM2.status(doc.sr), btn=document.getElementById('btn-review'), lbl=document.getElementById('review-lbl');
+  btn.className='btn-review';
+  /* If a rating was just submitted, show that rating's icon */
+  if(lastQuality!==null){
+    const icons={0:'○',3:'◐',4:'●',5:'✓'};
+    lbl.textContent=(icons[lastQuality]||'◎')+' Reviewed  ·  '+SM2.label(doc.sr);
     return;
   }
-  if(status === 'over')     { btn.classList.add('is-over'); lbl.textContent = '⊗ Overdue — ' + SM2.label(doc.sr); }
-  else if(status === 'due') { btn.classList.add('is-due');  lbl.textContent = '◉ Review Due Today'; }
-  else if(status === 'ok')  { lbl.textContent = '◎ Mark as Reviewed  ·  ' + SM2.label(doc.sr); }
-  else                      { lbl.textContent = '◎ Mark as Reviewed'; }
+  if(status==='over'){btn.classList.add('is-over');lbl.textContent='⊗ Overdue — '+SM2.label(doc.sr);}
+  else if(status==='due'){btn.classList.add('is-due');lbl.textContent='◉ Review Due Today';}
+  else if(status==='ok'){lbl.textContent='◎ Mark as Reviewed  ·  '+SM2.label(doc.sr);}
+  else{lbl.textContent='◎ Mark as Reviewed';}
 }
-
-/* ── Back button ── */
-document.getElementById('edt-back').addEventListener('click', () => {
-  haptic(8);
+document.getElementById('edt-back').addEventListener('click',()=>{
   clearTimeout(saveTimer); saveCurrentDoc();
   const doc = DB.get(currentDocId);
+  // Show tag modal if this is the first time closing (tagsAsked not set)
   if(doc && !doc.tagsAsked){
-    openTagModal(doc.tags || [], tags => {
+    openTagModal(doc.tags||[], tags=>{
       const d = DB.get(currentDocId); if(!d) return;
-      if(tags !== null) d.tags = tags;
-      d.tagsAsked = true; d.updatedAt = Date.now(); DB.save(d);
+      if(tags!==null) d.tags = tags;
+      d.tagsAsked = true; d.updatedAt = Date.now();
+      DB.save(d);
       showLibrary();
     });
-  } else { showLibrary(); }
+  } else {
+    showLibrary();
+  }
 });
 
 /* ══════════════════════════════════
    BLOCKS
 ══════════════════════════════════ */
-const TYPES = {
-  note:   { label: 'Note',          ph: 'Enter your analysis or notes…',    dot: '#3A5040' },
-  title:  { label: 'Section Title', ph: 'Enter section title…',             dot: '#C9A85C' },
-  ayah:   { label: 'Āyah',          ph: 'Enter Quranic verse…',             dot: '#D4A015' },
-  hadith: { label: 'Ḥadīth',        ph: 'Enter Ḥadīth narration…',         dot: '#3A9858' },
-  athar:  { label: 'Athar / Sharḥ', ph: 'Enter scholar commentary…',       dot: '#4878C8' }
-};
-const CYCLE = ['note', 'ayah', 'hadith', 'athar', 'title'];
-let focused = null, blkSeq = 0, layoutLocked = false;
-
-function setInd(t){ const c = TYPES[t] || TYPES.note; cVal.textContent = c.label; cDot.style.background = c.dot; cDot.style.boxShadow = '0 0 8px ' + c.dot + '66'; }
-function clearInd(){ cVal.textContent = '—'; cDot.style.background = 'var(--sb)'; cDot.style.boxShadow = 'none'; }
-function setLeg(t){ document.querySelectorAll('.leg').forEach(l => l.classList.toggle('on', l.dataset.type === t)); }
-
-function applyType(block, t){
-  if(!TYPES[t] || !block) return;
-  block.dataset.type = t;
-  block.querySelector('.block-text').dataset.ph = TYPES[t].ph;
+const TYPES={note:{label:'Note',ph:'Enter your analysis or notes…',dot:'#3A5040'},title:{label:'Section Title',ph:'Enter section title…',dot:'#C9A85C'},ayah:{label:'Āyah',ph:'Enter Quranic verse…',dot:'#D4A015'},hadith:{label:'Ḥadīth',ph:'Enter Ḥadīth narration…',dot:'#3A9858'},athar:{label:'Athar / Sharḥ',ph:'Enter scholar commentary…',dot:'#4878C8'}};
+const CYCLE=['note','ayah','hadith','athar','title'];
+let focused=null,blkSeq=0,layoutLocked=false;
+function setInd(t){ const c=TYPES[t]||TYPES.note; cVal.textContent=c.label; cDot.style.background=c.dot; cDot.style.boxShadow='0 0 8px '+c.dot+'66'; }
+function clearInd(){ cVal.textContent='—'; cDot.style.background='var(--sb)'; cDot.style.boxShadow='none'; }
+function setLeg(t){ document.querySelectorAll('.leg').forEach(l=>l.classList.toggle('on',l.dataset.type===t)); updateKbActive(t); }
+function applyType(block,t){
+  if(!TYPES[t]||!block) return;
+  block.dataset.type=t; block.querySelector('.block-text').dataset.ph=TYPES[t].ph;
   setLeg(t); setInd(t);
-  updateMobKbPills(t);
   block.classList.remove('flashed'); void block.offsetWidth; block.classList.add('flashed');
-  badge.textContent = TYPES[t].label;
-  badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show');
-  badge.addEventListener('animationend', () => badge.classList.remove('show'), { once: true });
-  scheduleSave();
+  badge.textContent=TYPES[t].label; badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show');
+  badge.addEventListener('animationend',()=>badge.classList.remove('show'),{once:true});
+  showToast('→ '+TYPES[t].label); scheduleSave();
 }
-
-const FSVG = `<svg class="fo" viewBox="0 0 50 12" fill="none"><line x1="0" y1="6" x2="17" y2="6" stroke="#B0BEA8" stroke-width=".55"/><polygon points="25,1 32,6 25,11 18,6" fill="rgba(176,190,168,.12)" stroke="#B0BEA8" stroke-width=".65"/><line x1="33" y1="6" x2="50" y2="6" stroke="#B0BEA8" stroke-width=".55"/></svg>`;
-
-function mkBlock(type, html){
-  type = type || 'note'; blkSeq++;
-  const w = document.createElement('div'); w.className = 'block'; w.dataset.type = type;
-  const bar = document.createElement('div'); bar.className = 'bar'; bar.title = 'Click to cycle type';
-  bar.addEventListener('mousedown', e => {
-    e.preventDefault();
-    applyType(w, CYCLE[(CYCLE.indexOf(w.dataset.type) + 1) % CYCLE.length]);
-    w.querySelector('.block-text').focus();
-  });
-  const ed = document.createElement('div');
-  ed.className = 'block-text'; ed.contentEditable = 'true';
-  ed.dir = 'ltr'; ed.spellcheck = true;
-  ed.dataset.ph = TYPES[type].ph;
-  if(html) ed.innerHTML = html;
-  ed.addEventListener('paste', onPaste);
-  const tools = document.createElement('div'); tools.className = 'block-tools';
-  const mkb = (ico, tip, fn) => {
-    const b = document.createElement('button'); b.className = 'bt'; b.title = tip; b.textContent = ico;
-    b.addEventListener('mousedown', e => { e.preventDefault(); fn(); }); return b;
-  };
-  tools.append(
-    mkb('↑', 'Move up (Shift+↑)', () => moveB(w, -1)),
-    mkb('↓', 'Move down (Shift+↓)', () => moveB(w, 1)),
-    mkb('✕', 'Delete', () => delB(w))
-  );
-  w.append(bar, ed, tools);
-  ed.addEventListener('focus', () => {
-    if(focused && focused !== w) focused.classList.remove('focused');
-    focused = w; w.classList.add('focused');
-    setLeg(w.dataset.type); setInd(w.dataset.type);
-    updateMobKbPills(w.dataset.type);
-    if(IS_MOBILE) scrollBlockIntoView(w);
-  });
-  ed.addEventListener('blur', () => {
-    setTimeout(() => {
-      if(focused === w){ w.classList.remove('focused'); focused = null; clearInd(); setLeg(null); }
-    }, 200);
-  });
-  ed.addEventListener('keydown', e => onKey(e, w));
-  ed.addEventListener('input', () => { layoutSched(); scheduleSave(); });
+const FSVG=`<svg class="fo" viewBox="0 0 50 12" fill="none"><line x1="0" y1="6" x2="17" y2="6" stroke="#B0BEA8" stroke-width=".55"/><polygon points="25,1 32,6 25,11 18,6" fill="rgba(176,190,168,.12)" stroke="#B0BEA8" stroke-width=".65"/><line x1="33" y1="6" x2="50" y2="6" stroke="#B0BEA8" stroke-width=".55"/></svg>`;
+function mkBlock(type,html){
+  type=type||'note'; blkSeq++;
+  const w=document.createElement('div'); w.className='block'; w.dataset.type=type;
+  const bar=document.createElement('div'); bar.className='bar'; bar.title='Click to cycle type';
+  bar.addEventListener('mousedown',e=>{ e.preventDefault(); applyType(w,CYCLE[(CYCLE.indexOf(w.dataset.type)+1)%CYCLE.length]); w.querySelector('.block-text').focus(); });
+  const ed=document.createElement('div'); ed.className='block-text'; ed.contentEditable='true'; ed.dir='auto'; ed.spellcheck=true; ed.dataset.ph=TYPES[type].ph; if(html) ed.innerHTML=html;
+  ed.addEventListener('paste',e=>{ e.preventDefault(); const txt=(e.clipboardData||window.clipboardData).getData('text/plain'); document.execCommand('insertText',false,txt); });
+  const tools=document.createElement('div'); tools.className='block-tools';
+  const mkb=(ico,tip,fn)=>{ const b=document.createElement('button'); b.className='bt'; b.title=tip; b.textContent=ico; b.addEventListener('mousedown',e=>{e.preventDefault();fn();}); return b; };
+  tools.append(mkb('↑','Move up (Shift+↑)',()=>moveB(w,-1)),mkb('↓','Move down (Shift+↓)',()=>moveB(w,1)),mkb('✕','Delete',()=>delB(w)));
+  w.append(bar,ed,tools);
+  ed.addEventListener('focus',()=>{ if(focused&&focused!==w) focused.classList.remove('focused'); focused=w; w.classList.add('focused'); setLeg(w.dataset.type); setInd(w.dataset.type); showKbRail(); });
+  ed.addEventListener('blur',()=>{ setTimeout(()=>{ if(focused===w){w.classList.remove('focused');focused=null;clearInd();setLeg(null);hideKbRail();}},150); });
+  ed.addEventListener('keydown',e=>onKey(e,w));
+  ed.addEventListener('input',()=>{ layoutSched(); scheduleSave(); });
   return w;
 }
+const allBlocks=()=>[...document.querySelectorAll('.page-body .block')];
+const lastBody=()=>{ const a=document.querySelectorAll('.page-body'); return a[a.length-1]; };
+function insertB(type,html,after){ const b=mkBlock(type,html||''); if(after&&after.parentNode&&after.parentNode.classList.contains('page-body')) after.insertAdjacentElement('afterend',b); else lastBody().appendChild(b); layoutSched(); scheduleSave(); return b; }
+function focusB(b,end=true){ const ed=b.querySelector('.block-text'); ed.focus(); if(end) caretEnd(ed); }
+function delB(b){ const all=allBlocks(); if(all.length<=1){const ed=b.querySelector('.block-text');ed.innerHTML='';applyType(b,'note');ed.focus();return;} const i=all.indexOf(b); b.remove(); layoutSched(); scheduleSave(); const rem=allBlocks(); if(rem.length) focusB(rem[Math.max(0,i-1)]); }
+function moveB(b,d){ const all=allBlocks(),i=all.indexOf(b); if(d===-1&&i>0) all[i-1].insertAdjacentElement('beforebegin',b); else if(d===1&&i<all.length-1) all[i+1].insertAdjacentElement('afterend',b); layoutSched(); scheduleSave(); focusB(b); }
+function onKey(e,b){ const ed=e.target; if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();focusB(insertB('note','',b));return;} if(e.key==='Backspace'&&isEmpty(ed)){e.preventDefault();delB(b);return;} if(e.shiftKey&&!e.ctrlKey){if(e.key==='ArrowUp'){e.preventDefault();moveB(b,-1);return;}if(e.key==='ArrowDown'){e.preventDefault();moveB(b,1);return;}} }
+const isEmpty=el=>el.textContent.trim()===''&&el.innerHTML.replace(/<br\s*\/?>/gi,'').trim()==='';
 
-function scrollBlockIntoView(b){
-  setTimeout(() => {
-    try{ b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(_){}
-  }, 100);
-}
+/* Legend — mousedown+preventDefault keeps focus */
+document.getElementById('legend').addEventListener('mousedown',e=>{ const item=e.target.closest('.leg'); if(!item) return; e.preventDefault(); if(focused){ applyType(focused,item.dataset.type); focused.querySelector('.block-text').focus(); } else showToast('Click a block first'); });
+document.getElementById('btn-add').addEventListener('click',()=>focusB(insertB('note','',focused)));
+document.getElementById('btn-print').addEventListener('click',()=>window.print());
 
-const allBlocks = () => [...document.querySelectorAll('.page-body .block')];
-const lastBody  = () => { const a = document.querySelectorAll('.page-body'); return a[a.length - 1]; };
-
-function insertB(type, html, after){
-  const b = mkBlock(type, html || '');
-  if(after && after.parentNode && after.parentNode.classList.contains('page-body')){
-    after.insertAdjacentElement('afterend', b);
-  } else { lastBody().appendChild(b); }
-  layoutSched(); scheduleSave(); return b;
-}
-function focusB(b, end = true){ const ed = b.querySelector('.block-text'); ed.focus(); if(end) caretEnd(ed); }
-function delB(b){
-  haptic(10);
-  const all = allBlocks();
-  if(all.length <= 1){
-    const ed = b.querySelector('.block-text'); ed.innerHTML = ''; applyType(b, 'note'); ed.focus(); return;
-  }
-  const i = all.indexOf(b); b.remove(); layoutSched(); scheduleSave();
-  const rem = allBlocks(); if(rem.length) focusB(rem[Math.max(0, i - 1)]);
-}
-function moveB(b, d){
-  haptic(6);
-  const all = allBlocks(), i = all.indexOf(b);
-  if(d === -1 && i > 0)              all[i - 1].insertAdjacentElement('beforebegin', b);
-  else if(d === 1 && i < all.length - 1) all[i + 1].insertAdjacentElement('afterend', b);
-  layoutSched(); scheduleSave(); focusB(b);
-}
-function onKey(e, b){
-  const ed = e.target;
-  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); focusB(insertB('note', '', b)); return; }
-  if(e.key === 'Backspace' && isEmpty(ed)){ e.preventDefault(); delB(b); return; }
-  if(e.shiftKey && !e.ctrlKey){
-    if(e.key === 'ArrowUp'){ e.preventDefault(); moveB(b, -1); return; }
-    if(e.key === 'ArrowDown'){ e.preventDefault(); moveB(b, 1); return; }
-  }
-}
-const isEmpty = el => el.textContent.trim() === '' && el.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '';
-
-/* Legend — mousedown to keep focus */
-document.getElementById('legend').addEventListener('mousedown', e => {
-  const item = e.target.closest('.leg'); if(!item) return;
-  e.preventDefault();
-  if(focused){ applyType(focused, item.dataset.type); focused.querySelector('.block-text').focus(); }
-  else showToast('Click a block first');
-});
-document.getElementById('btn-add').addEventListener('click', () => { haptic(8); focusB(insertB('note', '', focused)); });
-document.getElementById('btn-print').addEventListener('click', () => window.print());
-
-/* Sidebar secondary buttons */
-document.getElementById('btn-tags-sb').addEventListener('click', () => {
-  if(!currentDocId) return;
-  clearTimeout(saveTimer); saveCurrentDoc();
-  const doc = DB.get(currentDocId); if(!doc) return;
-  openTagModal(doc.tags || [], tags => {
-    if(tags === null) return;
-    const d = DB.get(currentDocId); if(!d) return;
-    d.tags = tags; d.tagsAsked = true; d.updatedAt = Date.now(); DB.save(d);
-    updateTagsButton(tags);
-    showToast(tags.length ? `${tags.length} science${tags.length !== 1 ? 's' : ''} saved` : 'Tags cleared');
-  });
-});
-document.getElementById('btn-review-sb').addEventListener('click', () => {
-  if(!currentDocId) return;
-  clearTimeout(saveTimer); saveCurrentDoc();
-  openReviewModal(currentDocId);
-});
-
-/* ══════════════════════════════════
-   MOBILE KEYBOARD TOOLBAR
-══════════════════════════════════ */
-function updateMobKbPills(activeType){
-  document.querySelectorAll('.mob-kb-pill').forEach(p => {
-    p.classList.toggle('kp-active', p.dataset.type === activeType);
-  });
-}
-document.querySelectorAll('.mob-kb-pill').forEach(p => {
-  p.addEventListener('click', () => {
-    if(!focused) return;
-    haptic(8);
-    applyType(focused, p.dataset.type);
-    focused.querySelector('.block-text').focus();
-  });
-});
-document.getElementById('mob-kb-add').addEventListener('click', () => {
-  haptic(10);
-  focusB(insertB('note', '', focused));
-});
-document.getElementById('mob-kb-up').addEventListener('click', () => {
-  if(focused) moveB(focused, -1);
-});
-document.getElementById('mob-kb-down').addEventListener('click', () => {
-  if(focused) moveB(focused, 1);
-});
-document.getElementById('mob-kb-del').addEventListener('click', () => {
-  if(focused) delB(focused);
-});
-
-/* ══════════════════════════════════
-   MOBILE SLIDE-OVER SIDEBAR
-══════════════════════════════════ */
-function openMobSidebar(){
-  // Clone sidebar content into mobile drawer
-  const drawer = document.getElementById('mob-sb-content');
-  drawer.innerHTML = '';
-  const sidebarSecs = document.querySelectorAll('.sidebar .sb-sec');
-  sidebarSecs.forEach(sec => {
-    drawer.appendChild(sec.cloneNode(true));
-  });
-  // Re-wire input events on cloned fields
-  const clonedTitle  = drawer.querySelector('#i-title');
-  const clonedAuthor = drawer.querySelector('#i-author');
-  const clonedChap   = drawer.querySelector('#i-chapter');
-  if(clonedTitle)  { clonedTitle.value  = gT(dTitle);  clonedTitle.addEventListener('input',  () => { sT(dTitle,  clonedTitle.value);  iTitle.value  = clonedTitle.value;  syncMeta(); scheduleSave(); }); }
-  if(clonedAuthor) { clonedAuthor.value = gT(dAuthor); clonedAuthor.addEventListener('input', () => { sT(dAuthor, clonedAuthor.value); iAuthor.value = clonedAuthor.value; syncSep();  scheduleSave(); }); }
-  if(clonedChap)   { clonedChap.value   = gT(dChap);   clonedChap.addEventListener('input',   () => { sT(dChap,   clonedChap.value);   iChap.value   = clonedChap.value;   syncSep();  scheduleSave(); }); }
-  // Page type buttons in clone
-  drawer.querySelectorAll('.pgt').forEach(b => {
-    b.classList.toggle('on', b.dataset.pt === pgType);
-    b.addEventListener('click', () => {
-      pgType = b.dataset.pt;
-      document.querySelectorAll('.pgt').forEach(x => x.classList.remove('on'));
-      drawer.querySelectorAll('.pgt').forEach(x => x.classList.remove('on'));
-      document.querySelectorAll(`.pgt[data-pt="${pgType}"]`).forEach(x => x.classList.add('on'));
-      document.querySelector('.a4[data-page="1"]').classList.toggle('cont', pgType === 'cont');
-      drawer.querySelector('#pg-row') && (drawer.querySelector('#pg-row').style.display = pgType === 'cont' ? '' : 'none');
-      document.getElementById('pg-row').style.display = pgType === 'cont' ? '' : 'none';
-      syncLabels(); layoutSched(); scheduleSave();
-    });
-  });
-  // Add block / print in clone
-  const addBtn = drawer.querySelector('#btn-add'); if(addBtn){ addBtn.removeAttribute('id'); addBtn.addEventListener('click', () => { haptic(8); focusB(insertB('note', '', focused)); closeMobSidebar(); }); }
-  const printBtn = drawer.querySelector('#btn-print'); if(printBtn){ printBtn.removeAttribute('id'); printBtn.addEventListener('click', () => { closeMobSidebar(); window.print(); }); }
-  const tagsSbBtn = drawer.querySelector('#btn-tags-sb'); if(tagsSbBtn){ tagsSbBtn.removeAttribute('id'); tagsSbBtn.addEventListener('click', () => { closeMobSidebar(); document.getElementById('btn-tags-sb').click(); }); }
-  const revSbBtn = drawer.querySelector('#btn-review-sb'); if(revSbBtn){ revSbBtn.removeAttribute('id'); revSbBtn.addEventListener('click', () => { closeMobSidebar(); openReviewModal(currentDocId); }); }
-  // Legend in clone
-  drawer.querySelectorAll('.leg').forEach(item => {
-    item.addEventListener('click', () => {
-      if(focused){ applyType(focused, item.dataset.type); closeMobSidebar(); focused.querySelector('.block-text').focus(); }
-    });
-  });
-  document.getElementById('mob-sidebar-panel').classList.add('open');
-}
-function closeMobSidebar(){
-  document.getElementById('mob-sidebar-panel').classList.remove('open');
-}
-document.getElementById('mob-menu-btn').addEventListener('click', () => { haptic(8); openMobSidebar(); });
-document.getElementById('mob-sb-close').addEventListener('click', closeMobSidebar);
-document.getElementById('mob-sidebar-overlay').addEventListener('click', closeMobSidebar);
 
 /* ══════════════════════════════════
    ISLAMIC SCIENCES
 ══════════════════════════════════ */
-const SCIENCES = [
-  {id:'tajweed',     label:'Tajwīd / Qirāʾāt'},
-  {id:'tafsir',      label:'Tafsīr'},
-  {id:'usul-tafsir', label:'Uṣūl al-Tafsīr'},
-  {id:'ulum-quran',  label:'ʿUlūm al-Qurʾān'},
-  {id:'hadith',      label:'Ḥadīth'},
-  {id:'mustalah',    label:'Muṣṭalaḥ al-Ḥadīth'},
-  {id:'ilal',        label:'ʿIlal al-Ḥadīth'},
-  {id:'aqeedah',     label:'ʿAqīdah'},
-  {id:'fiqh-hanbali',label:'Fiqh – Ḥanbalī'},
-  {id:'fiqh-shafi',  label:'Fiqh – Shāfiʿī'},
-  {id:'fiqh-maliki', label:'Fiqh – Mālikī'},
-  {id:'fiqh-hanafi', label:'Fiqh – Ḥanafī'},
-  {id:'usul-fiqh',   label:'Uṣūl al-Fiqh'},
-  {id:'qawaid',      label:'Qawāʿid Fiqhiyya'},
-  {id:'faraid',      label:'Farāʾiḍ'},
-  {id:'nahw',        label:'Naḥw'},
-  {id:'sarf',        label:'Ṣarf'},
-  {id:'balagha',     label:'Balāghah'},
-  {id:'poetry',      label:'Science of Poetry'},
-  {id:'short-poems', label:'Short Poems'},
-  {id:'adab',        label:'Arabic Literature'},
-  {id:'seerah',      label:'Sīrah'},
-  {id:'tarikh',      label:'Islamic History'},
-  {id:'tazkiyah',    label:'Tazkiyah / Adab'},
-  {id:'mantiq',      label:'Manṭiq'},
+const SCIENCES=[
+  /* Quran */
+  {id:'tajweed',      label:'Tajwīd / Qirāʾāt'},
+  {id:'tafsir',       label:'Tafsīr'},
+  {id:'usul-tafsir',  label:'Uṣūl al-Tafsīr'},
+  {id:'ulum-quran',   label:'ʿUlūm al-Qurʾān'},
+  /* Ḥadīth */
+  {id:'hadith',       label:'Ḥadīth'},
+  {id:'mustalah',     label:'Muṣṭalaḥ al-Ḥadīth'},
+  {id:'ilal',         label:'ʿIlal al-Ḥadīth'},
+  /* ʿAqīdah */
+  {id:'aqeedah',      label:'ʿAqīdah'},
+  /* Fiqh */
+  {id:'fiqh-hanbali', label:'Fiqh – Ḥanbalī'},
+  {id:'fiqh-shafi',   label:'Fiqh – Shāfiʿī'},
+  {id:'fiqh-maliki',  label:'Fiqh – Mālikī'},
+  {id:'fiqh-hanafi',  label:'Fiqh – Ḥanafī'},
+  {id:'usul-fiqh',    label:'Uṣūl al-Fiqh'},
+  {id:'qawaid',       label:'Qawāʿid Fiqhiyya'},
+  {id:'faraid',       label:'Farāʾiḍ'},
+  /* Arabic Language */
+  {id:'nahw',         label:'Naḥw'},
+  {id:'sarf',         label:'Ṣarf'},
+  {id:'balagha',      label:'Balāghah'},
+  {id:'poetry',       label:'Science of Poetry'},
+  {id:'short-poems',  label:'Short Poems'},
+  {id:'adab',         label:'Arabic Literature'},
+  /* History & Sīrah */
+  {id:'seerah',       label:'Sīrah'},
+  {id:'tarikh',       label:'Islamic History'},
+  /* Spirituality & Logic */
+  {id:'tazkiyah',     label:'Tazkiyah / Adab'},
+  {id:'mantiq',       label:'Manṭiq'},
 ];
 
 /* ── Tag modal ── */
-let tagModalCallback = null;
+let tagModalCallback = null; // called with chosen tags when modal closes
 
 function openTagModal(currentTags, onDone){
   tagModalCallback = onDone;
   const grid = document.getElementById('tag-modal-grid');
   grid.innerHTML = '';
-  SCIENCES.forEach(s => {
+  SCIENCES.forEach(s=>{
     const p = document.createElement('button');
     p.className = 'tag-pill' + (currentTags.includes(s.id) ? ' active' : '');
     p.textContent = s.label; p.dataset.tagId = s.id;
-    p.addEventListener('click', () => { haptic(6); p.classList.toggle('active'); });
+    p.addEventListener('click', () => p.classList.toggle('active'));
     grid.appendChild(p);
   });
   document.getElementById('tag-modal').classList.add('open');
 }
+
 function closeTagModal(save){
   const modal = document.getElementById('tag-modal');
-  const tags = save ? [...modal.querySelectorAll('.tag-pill.active')].map(p => p.dataset.tagId) : null;
+  const tags = save
+    ? [...modal.querySelectorAll('.tag-pill.active')].map(p=>p.dataset.tagId)
+    : null; // null = skipped
   modal.classList.remove('open');
-  if(tagModalCallback){ tagModalCallback(tags); tagModalCallback = null; }
+  if(tagModalCallback) { tagModalCallback(tags); tagModalCallback = null; }
 }
+
 document.getElementById('tag-save').addEventListener('click', () => closeTagModal(true));
 document.getElementById('tag-skip').addEventListener('click', () => closeTagModal(false));
-document.getElementById('tag-modal').addEventListener('click', e => {
-  if(e.target === document.getElementById('tag-modal')) closeTagModal(false);
+document.getElementById('tag-modal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('tag-modal')) closeTagModal(false);
 });
 
 /* Tags topbar button */
-document.getElementById('btn-tags').addEventListener('click', () => {
+document.getElementById('btn-tags').addEventListener('click', ()=>{
   if(!currentDocId) return;
   clearTimeout(saveTimer); saveCurrentDoc();
   const doc = DB.get(currentDocId); if(!doc) return;
-  openTagModal(doc.tags || [], tags => {
-    if(tags === null) return;
+  openTagModal(doc.tags||[], tags=>{
+    if(tags===null) return; // skipped
     const d = DB.get(currentDocId); if(!d) return;
-    d.tags = tags; d.tagsAsked = true; d.updatedAt = Date.now(); DB.save(d);
+    d.tags = tags; d.tagsAsked = true; d.updatedAt = Date.now();
+    DB.save(d);
     updateTagsButton(tags);
-    showToast(tags.length ? `${tags.length} science${tags.length !== 1 ? 's' : ''} saved` : 'Tags cleared');
+    showToast(tags.length ? `${tags.length} science${tags.length!==1?'s':''} saved` : 'Tags cleared');
   });
 });
+
 function updateTagsButton(tags){
-  const btn = document.getElementById('btn-tags'); if(!btn) return;
-  if(tags && tags.length){ btn.classList.add('has-tags'); btn.textContent = '⟐ ' + tags.length + ' Science' + (tags.length !== 1 ? 's' : ''); }
-  else { btn.classList.remove('has-tags'); btn.textContent = '⟐ Sciences'; }
+  const btn = document.getElementById('btn-tags');
+  if(!btn) return;
+  if(tags && tags.length){
+    btn.classList.add('has-tags');
+    btn.textContent = '⟐ ' + tags.length + ' Science' + (tags.length!==1?'s':'');
+  } else {
+    btn.classList.remove('has-tags');
+    btn.textContent = '⟐ Sciences';
+  }
 }
 
 /* ══════════════════════════════════
-   GLOBAL HOTKEYS
+   GLOBAL HOTKEYS  Alt+0/1/2/3
 ══════════════════════════════════ */
-document.addEventListener('keydown', e => {
-  if(!e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) return;
-  if(!focused) return;
-  const m = { Digit1: 'ayah', Digit2: 'hadith', Digit3: 'athar', Digit0: 'note', Digit4: 'title' };
-  const t = m[e.code]; if(!t) return;
-  e.preventDefault(); applyType(focused, t);
-}, true);
+document.addEventListener('keydown',e=>{ if(!e.altKey||e.ctrlKey||e.shiftKey||e.metaKey) return; if(!focused) return; const m={Digit1:'ayah',Digit2:'hadith',Digit3:'athar',Digit0:'note',Digit4:'title'}; const t=m[e.code]; if(!t) return; e.preventDefault(); applyType(focused,t); },true);
 
 /* ══════════════════════════════════
-   LAYOUT ENGINE (flicker-free, bug-fixed)
+   LAYOUT ENGINE — flicker-free
+   Early exit if distribution unchanged
 ══════════════════════════════════ */
-const PGN = 870;
-let layoutTimer = null;
-
-function layoutSched(){
-  clearTimeout(layoutTimer);
-  layoutTimer = setTimeout(() => requestAnimationFrame(doLayout), 200);
-}
-
+const PGN=870; let layoutTimer;
+function layoutSched(){ clearTimeout(layoutTimer); layoutTimer=setTimeout(()=>requestAnimationFrame(doLayout),200); }
 function doLayout(){
   if(layoutLocked) return;
-  const all = allBlocks(); if(all.length) all[0].getBoundingClientRect();
-  const hts = all.map(b => b.offsetHeight + 3);
-  const dist = [[]]; let acc = 0;
-  hts.forEach((h, i) => {
-    const lim = dist.length === 1 ? (pgType === 'cont' ? PGN : 712) : PGN;
-    if(acc > 0 && acc + h > lim){ dist.push([]); acc = 0; }
-    dist[dist.length - 1].push(all[i]); acc += h;
-  });
-  const need = Math.max(1, dist.length);
-  const curB = [...document.querySelectorAll('.page-body')];
-  if(curB.length === need){
-    const same = dist.every((blks, pi) => {
-      const cb = [...curB[pi].children].filter(c => c.classList.contains('block'));
-      return cb.length === blks.length && blks.every((b, j) => b === cb[j]);
+  if(MOBILE){ collapseToSinglePage(); return; }
+  const all=allBlocks(); if(all.length) all[0].getBoundingClientRect();
+  const hts=all.map(b=>b.offsetHeight+3);
+  const dist=[[]]; let acc=0;
+  hts.forEach((h,i)=>{ const lim=dist.length===1?(pgType==='cont'?PGN:712):PGN; if(acc>0&&acc+h>lim){dist.push([]);acc=0;} dist[dist.length-1].push(all[i]); acc+=h; });
+  const need=Math.max(1,dist.length);
+  const curB=[...document.querySelectorAll('.page-body')];
+  if(curB.length===need){ const same=dist.every((blks,pi)=>{ const cb=[...curB[pi].children].filter(c=>c.classList.contains('block')); return cb.length===blks.length&&blks.every((b,j)=>b===cb[j]); }); if(same) return; }
+  layoutLocked=true;
+  const ae=document.activeElement,isFB=ae&&ae.classList.contains('block-text');
+  let fNode=null,fOff=0; if(isFB){ const s=window.getSelection(); if(s&&s.focusNode){fNode=s.focusNode;fOff=s.focusOffset;} }
+  all.forEach(b=>b.parentNode&&b.parentNode.removeChild(b));
+  const cur=pages.querySelectorAll('.a4').length;
+  if(need>cur) for(let i=cur+1;i<=need;i++) pages.appendChild(mkPage(i));
+  else if(need<cur){ const pgs=[...pages.querySelectorAll('.a4')]; for(let i=need;i<pgs.length;i++) pgs[i].remove(); }
+  const bodies=[...document.querySelectorAll('.page-body')];
+  dist.forEach((blks,pi)=>{ if(bodies[pi]) blks.forEach(bl=>bodies[pi].appendChild(bl)); });
+  syncMeta(); syncLabels();
+  const b1=document.getElementById('body-1'); if(b1) b1.classList.toggle('empty',b1.querySelectorAll('.block').length===0);
+  if(isFB&&document.body.contains(ae)){
+    requestAnimationFrame(()=>{
+      ae.focus({preventScroll:true});
+      if(fNode&&document.body.contains(fNode)){ try{ const r=document.createRange(); const mx=fNode.nodeType===3?fNode.textContent.length:fNode.childNodes.length; r.setStart(fNode,Math.min(fOff,mx)); r.collapse(true); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }catch(_){caretEnd(ae);} }
+      requestAnimationFrame(()=>{ ae.scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'}); layoutLocked=false; });
     });
-    if(same) return;
-  }
-  layoutLocked = true;
-  const ae = document.activeElement, isFB = ae && ae.classList.contains('block-text');
-  let fNode = null, fOff = 0;
-  if(isFB){ const s = window.getSelection(); if(s && s.focusNode){ fNode = s.focusNode; fOff = s.focusOffset; } }
-  try{
-    all.forEach(b => b.parentNode && b.parentNode.removeChild(b));
-    const cur = pages.querySelectorAll('.a4').length;
-    if(need > cur) for(let i = cur + 1; i <= need; i++) pages.appendChild(mkPage(i));
-    else if(need < cur){ const pgs = [...pages.querySelectorAll('.a4')]; for(let i = need; i < pgs.length; i++) pgs[i].remove(); }
-    const bodies = [...document.querySelectorAll('.page-body')];
-    dist.forEach((blks, pi) => { if(bodies[pi]) blks.forEach(bl => bodies[pi].appendChild(bl)); });
-    syncMeta(); syncLabels();
-    const b1 = document.getElementById('body-1');
-    if(b1) b1.classList.toggle('empty', b1.querySelectorAll('.block').length === 0);
-  } finally {
-    if(isFB && document.body.contains(ae)){
-      requestAnimationFrame(() => {
-        ae.focus({ preventScroll: true });
-        if(fNode && document.body.contains(fNode)){
-          try{
-            const r = document.createRange();
-            const mx = fNode.nodeType === 3 ? fNode.textContent.length : fNode.childNodes.length;
-            r.setStart(fNode, Math.min(fOff, mx)); r.collapse(true);
-            const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-          } catch(_){ caretEnd(ae); }
-        }
-        requestAnimationFrame(() => {
-          ae.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          layoutLocked = false;
-        });
-      });
-    } else { layoutLocked = false; }
-  }
+  } else { layoutLocked=false; }
 }
-
 function mkPage(n){
-  const a = document.createElement('div'); a.className = 'a4 new'; a.dataset.page = n;
-  a.addEventListener('animationend', () => a.classList.remove('new'), { once: true });
-  const t = gT(dTitle);
-  a.innerHTML = `<div class="pmini"><span class="pmh">${t}</span><span class="pmh-sep" ${t ? '' : 'style="display:none"'}>·</span><span class="pg-lbl">${pgLbl(n)}</span></div><div class="page-body"></div><footer class="doc-foot"><span class="ft pft">${t}</span>${FSVG}<span class="ft pg-lbl">${pgLbl(n)}</span></footer>`;
+  const a=document.createElement('div'); a.className='a4 new'; a.dataset.page=n;
+  a.addEventListener('animationend',()=>a.classList.remove('new'),{once:true});
+  const t=gT(dTitle);
+  a.innerHTML=`<div class="pmini"><span class="pmh">${esc(t)}</span><span class="pmh-sep" ${t?'':'style="display:none"'}>·</span><span class="pg-lbl">${pgLbl(n)}</span></div><div class="page-body"></div><footer class="doc-foot"><span class="ft pft">${esc(t)}</span>${FSVG}<span class="ft pg-lbl">${pgLbl(n)}</span></footer>`;
   return a;
 }
 
 /* ══════════════════════════════════
    REVIEW MODAL
 ══════════════════════════════════ */
-document.getElementById('btn-review').addEventListener('click', () => {
-  if(!currentDocId) return; haptic(8);
-  clearTimeout(saveTimer); saveCurrentDoc();
-  openReviewModal(currentDocId);
-});
+document.getElementById('btn-review').addEventListener('click',()=>{ if(!currentDocId) return; clearTimeout(saveTimer); saveCurrentDoc(); openReviewModal(currentDocId); });
 function openReviewModal(id){
-  reviewDocId = id; const doc = DB.get(id); if(!doc) return;
-  document.getElementById('rev-title').textContent = doc.title || 'Untitled Document';
-  const info = document.getElementById('rev-info');
-  if(!doc.sr.lastReview){ info.textContent = 'First review — rate your confidence honestly.'; }
-  else { info.innerHTML = `Last reviewed: <strong>${new Date(doc.sr.lastReview).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</strong> · Rep #${doc.sr.repetitions} · Ease: ${doc.sr.easeFactor.toFixed(2)}`; }
-  [0, 3, 4, 5].forEach(q => {
-    const next = SM2.schedule({ ...doc.sr }, q);
-    document.getElementById('ri-' + q).textContent = SM2.fmt(next.interval);
-  });
+  reviewDocId=id; const doc=DB.get(id); if(!doc) return;
+  document.getElementById('rev-title').textContent=doc.title||'Untitled Document';
+  const info=document.getElementById('rev-info');
+  if(!doc.sr.lastReview) info.textContent='First review — rate your confidence honestly.';
+  else info.innerHTML=`Last reviewed: <strong>${new Date(doc.sr.lastReview).toLocaleDateString(undefined,{month:'short',day:'numeric'})}</strong> · Rep #${doc.sr.repetitions} · Ease: ${doc.sr.easeFactor.toFixed(2)}`;
+  [0,3,4,5].forEach(q=>{ const next=SM2.schedule({...doc.sr},q); document.getElementById('ri-'+q).textContent=SM2.fmt(next.interval); });
   document.getElementById('rev-modal').classList.add('open');
 }
-document.querySelectorAll('.rating-btn').forEach(btn => btn.addEventListener('click', () => {
-  haptic(12); submitReview(parseInt(btn.dataset.q));
-}));
-document.getElementById('rev-cancel').addEventListener('click', () => document.getElementById('rev-modal').classList.remove('open'));
-document.getElementById('rev-modal').addEventListener('click', e => {
-  if(e.target === document.getElementById('rev-modal')) document.getElementById('rev-modal').classList.remove('open');
-});
+document.querySelectorAll('.rating-btn').forEach(btn=>btn.addEventListener('click',()=>submitReview(parseInt(btn.dataset.q))));
+document.getElementById('rev-cancel').addEventListener('click',()=>document.getElementById('rev-modal').classList.remove('open'));
+document.getElementById('rev-modal').addEventListener('click',e=>{ if(e.target===document.getElementById('rev-modal')) document.getElementById('rev-modal').classList.remove('open'); });
 function submitReview(q){
-  const doc = DB.get(reviewDocId); if(!doc) return;
-  doc.sr = SM2.schedule({ ...doc.sr }, q); doc.updatedAt = Date.now(); DB.save(doc);
+  const doc=DB.get(reviewDocId); if(!doc) return;
+  doc.sr=SM2.schedule({...doc.sr},q); doc.updatedAt=Date.now(); DB.save(doc);
   document.getElementById('rev-modal').classList.remove('open');
-  showToast('✓ Next review: ' + SM2.fmt(doc.sr.interval));
+  showToast('✓ Next review: '+SM2.fmt(doc.sr.interval));
   updateEditorBar(doc, q);
 }
 
@@ -2067,31 +1701,191 @@ function submitReview(q){
    TOAST + CARET
 ══════════════════════════════════ */
 let toastTmr;
-function showToast(m){
-  toastEl.textContent = m; toastEl.classList.add('show');
-  clearTimeout(toastTmr); toastTmr = setTimeout(() => toastEl.classList.remove('show'), 2400);
-}
-function caretEnd(el){
-  try{
-    const r = document.createRange(); r.selectNodeContents(el); r.collapse(false);
-    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-  } catch(_){}
-}
+function showToast(m){ toastEl.textContent=m; toastEl.classList.add('show'); clearTimeout(toastTmr); toastTmr=setTimeout(()=>toastEl.classList.remove('show'),2200); }
+function caretEnd(el){ try{const r=document.createRange();r.selectNodeContents(el);r.collapse(false);const s=window.getSelection();s.removeAllRanges();s.addRange(r);}catch(_){} }
 
 /* ══════════════════════════════════
    INIT
 ══════════════════════════════════ */
 (function(){
   if(localStorage.getItem('talib-welcomed')){ obWrap.classList.add('off'); showLibrary(); }
-  // Mobile: hide keyboard toolbar until we're in editor
-  if(!IS_MOBILE) document.getElementById('mob-kb-bar').style.display = 'none';
-  // Prevent scroll-to-zoom on iOS in input fields
-  if(IS_MOBILE){
-    document.querySelectorAll('input[type=text], input[type=number]').forEach(inp => {
-      inp.style.fontSize = '16px';
-    });
-  }
 }());
+
+/* ══════════════════════════════════
+   MOBILE EXPERIENCE
+   ──────────────────────────────────
+   · phone detection + body.is-mobile
+   · single continuous page on phones
+   · frosted color rail above keyboard
+   · bottom sheets for sidebar actions
+══════════════════════════════════ */
+var MOBILE = false;
+const _mq = window.matchMedia('(max-width:768px)');
+const SUPPORTS_POINTER = 'PointerEvent' in window;
+
+function computeMobile(){
+  return _mq.matches || (window.matchMedia('(pointer:coarse)').matches && window.innerWidth<=900);
+}
+function setMode(){
+  const m = computeMobile();
+  if(m===MOBILE) return;
+  MOBILE = m;
+  document.body.classList.toggle('is-mobile', MOBILE);
+  if(!MOBILE){ hideKbRail(); closeSheet('m-sheet-wrap'); closeSheet('m-lib-wrap'); }
+  if(currentDocId && !document.getElementById('edt').classList.contains('off')){
+    layoutLocked = false;
+    doLayout();
+  }
+}
+if(_mq.addEventListener) _mq.addEventListener('change', setMode);
+else if(_mq.addListener) _mq.addListener(setMode);
+window.addEventListener('orientationchange', ()=>setTimeout(setMode,150));
+window.addEventListener('resize', ()=>{ setMode(); positionKbRail(); });
+
+/* ── Single continuous page (phones) ── */
+function collapseToSinglePage(){
+  const b1 = document.getElementById('body-1');
+  if(!b1) return;
+  const all = allBlocks();
+  [...pages.querySelectorAll('.a4')].slice(1).forEach(p=>p.remove());
+  const ae = document.activeElement, isFB = ae && ae.classList && ae.classList.contains('block-text');
+  let fNode=null, fOff=0;
+  if(isFB){ const s=window.getSelection(); if(s&&s.focusNode){ fNode=s.focusNode; fOff=s.focusOffset; } }
+  all.forEach(b=>{ if(b.parentNode!==b1) b1.appendChild(b); });
+  syncMeta(); syncLabels();
+  b1.classList.toggle('empty', b1.querySelectorAll('.block').length===0);
+  if(isFB && document.body.contains(ae)){
+    ae.focus({preventScroll:true});
+    if(fNode && document.body.contains(fNode)){
+      try{ const r=document.createRange(); const mx=fNode.nodeType===3?fNode.textContent.length:fNode.childNodes.length; r.setStart(fNode,Math.min(fOff,mx)); r.collapse(true); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+      catch(_){ caretEnd(ae); }
+    }
+  }
+}
+
+/* ── Keyboard color rail ── */
+function showKbRail(){
+  if(!MOBILE) return;
+  const r = document.getElementById('kb-rail');
+  if(!r) return;
+  r.classList.add('show');
+  positionKbRail();
+}
+function hideKbRail(){
+  const r = document.getElementById('kb-rail');
+  if(!r) return;
+  r.classList.remove('show');
+  r.style.bottom = '';
+  r.style.paddingBottom = '';
+}
+function positionKbRail(){
+  const r = document.getElementById('kb-rail');
+  if(!r || !r.classList.contains('show')) return;
+  const vv = window.visualViewport;
+  if(!vv){ r.style.bottom='0px'; return; }
+  const overlap = Math.max(0, Math.round(window.innerHeight - (vv.height + vv.offsetTop)));
+  r.style.bottom = overlap + 'px';
+  r.style.paddingBottom = overlap>0 ? '0px' : '';
+}
+function updateKbActive(t){
+  document.querySelectorAll('#kb-rail .kb-type').forEach(b=>b.classList.toggle('on', b.dataset.type===t));
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', positionKbRail);
+  window.visualViewport.addEventListener('scroll', positionKbRail);
+}
+
+/* Tap helper: keep the soft keyboard open while running an action */
+function bindTool(el, fn){
+  if(!el) return;
+  if(SUPPORTS_POINTER){
+    el.addEventListener('pointerdown', e=>{ e.preventDefault(); fn(); });
+  } else {
+    el.addEventListener('mousedown', e=>e.preventDefault());
+    el.addEventListener('click', e=>{ e.preventDefault(); fn(); });
+  }
+}
+function refocus(){ if(focused){ const ed=focused.querySelector('.block-text'); if(ed) ed.focus(); } }
+
+document.querySelectorAll('#kb-rail .kb-type').forEach(btn=>{
+  bindTool(btn, ()=>{
+    if(!focused){ showToast('Tap a block first'); return; }
+    applyType(focused, btn.dataset.type);
+    refocus();
+  });
+});
+bindTool(document.getElementById('kb-add'),  ()=>{ focusB(insertB('note','',focused)); });
+bindTool(document.getElementById('kb-up'),   ()=>{ if(focused) moveB(focused,-1); });
+bindTool(document.getElementById('kb-down'), ()=>{ if(focused) moveB(focused,1); });
+bindTool(document.getElementById('kb-del'),  ()=>{ if(focused) delB(focused); });
+/* Done dismisses the keyboard, so let blur happen naturally */
+document.getElementById('kb-done').addEventListener('click', ()=>{
+  if(focused){ const ed=focused.querySelector('.block-text'); if(ed) ed.blur(); }
+  hideKbRail();
+});
+
+/* ── Bottom sheets ── */
+function openSheet(id){ const w=document.getElementById(id); if(w) w.classList.add('open'); }
+function closeSheet(id){ const w=document.getElementById(id); if(w) w.classList.remove('open'); }
+
+function syncMobilePageUI(){
+  const seg = document.getElementById('ms-pgtype');
+  if(seg) seg.querySelectorAll('.seg-btn').forEach(b=>b.classList.toggle('on', b.dataset.pt===pgType));
+  const pgRow = document.getElementById('ms-pg-row');
+  if(pgRow) pgRow.style.display = pgType==='cont' ? 'flex' : 'none';
+  const st = document.getElementById('ms-pg-start');
+  if(st && document.activeElement!==st) st.value = pgStart;
+}
+function updateMobileSubs(){
+  const doc = currentDocId ? DB.get(currentDocId) : null;
+  if(!doc) return;
+  const rs = document.getElementById('ms-review-sub');
+  if(rs) rs.textContent = SM2.label(doc.sr);
+  const ss = document.getElementById('ms-sci-sub');
+  if(ss){ const n=(doc.tags||[]).length; ss.textContent = n ? (n+' science'+(n!==1?'s':'')+' tagged') : 'Tag this document'; }
+}
+
+/* Editor options sheet */
+document.getElementById('m-menu').addEventListener('click', ()=>{
+  syncMobilePageUI(); updateMobileSubs(); openSheet('m-sheet-wrap');
+});
+document.getElementById('ms-review').addEventListener('click', ()=>{
+  closeSheet('m-sheet-wrap');
+  setTimeout(()=>document.getElementById('btn-review').click(), 260);
+});
+document.getElementById('ms-sciences').addEventListener('click', ()=>{
+  closeSheet('m-sheet-wrap');
+  setTimeout(()=>document.getElementById('btn-tags').click(), 260);
+});
+document.getElementById('ms-pgtype').querySelectorAll('.seg-btn').forEach(b=>{
+  b.addEventListener('click', ()=>applyPageType(b.dataset.pt));
+});
+document.getElementById('ms-pg-start').addEventListener('input', e=>applyPageStart(e.target.value));
+document.getElementById('ms-print').addEventListener('click', ()=>{
+  closeSheet('m-sheet-wrap');
+  setTimeout(()=>window.print(), 320);
+});
+document.getElementById('ms-close').addEventListener('click', ()=>closeSheet('m-sheet-wrap'));
+document.getElementById('m-sheet-wrap').addEventListener('click', e=>{
+  if(e.target===document.getElementById('m-sheet-wrap')) closeSheet('m-sheet-wrap');
+});
+
+/* Library options sheet */
+document.getElementById('m-lib-menu').addEventListener('click', ()=>openSheet('m-lib-wrap'));
+document.getElementById('ml-pdf').addEventListener('click', ()=>{ closeSheet('m-lib-wrap'); setTimeout(exportAllAsPDF,260); });
+document.getElementById('ml-export').addEventListener('click', ()=>{ closeSheet('m-lib-wrap'); document.getElementById('btn-export').click(); });
+document.getElementById('ml-import').addEventListener('click', ()=>{ closeSheet('m-lib-wrap'); document.getElementById('btn-import').click(); });
+document.getElementById('ml-about').addEventListener('click', ()=>{ closeSheet('m-lib-wrap'); document.getElementById('btn-about').click(); });
+document.getElementById('ml-close').addEventListener('click', ()=>closeSheet('m-lib-wrap'));
+document.getElementById('m-lib-wrap').addEventListener('click', e=>{
+  if(e.target===document.getElementById('m-lib-wrap')) closeSheet('m-lib-wrap');
+});
+
+/* New-document FAB */
+document.getElementById('m-fab').addEventListener('click', newDoc);
+
+/* Initialise mode once on load */
+setMode();
 </script>
 </body>
 </html>
