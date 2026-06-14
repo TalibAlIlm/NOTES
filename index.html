@@ -243,7 +243,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   background:var(--s3);color:var(--sm);font-size:11px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;transition:all .2s;}
 .lq-clear:hover{background:var(--sb);color:var(--st);}
-.search-meta{font-size:11px;color:var(--sm);letter-spacing:.02em;margin-bottom:18px;}
+.search-meta{font-size:11px;color:var(--sm);letter-spacing:.02em;margin-bottom:18px;animation:fade-up .35s ease both;}
 .search-meta em{color:var(--g1);font-style:normal;font-weight:600;}
 .lib-body{padding:28px 36px 60px;max-width:1200px;margin:0 auto;}
 .sec-lbl{font-size:8.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
@@ -252,17 +252,21 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .due-sec{margin-bottom:36px;}
 .due-dot{width:7px;height:7px;border-radius:50%;background:var(--sr-over);flex-shrink:0;}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+@keyframes card-in{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
 .doc-card{
   background:var(--s1);border:1px solid var(--sb);border-radius:6px;
   overflow:hidden;cursor:pointer;display:flex;flex-direction:column;
-  transition:border-color .2s,transform .2s,box-shadow .2s;
+  transition:border-color .22s,transform .22s cubic-bezier(.22,.8,.36,1),box-shadow .22s;
+  animation:card-in .44s cubic-bezier(.22,.8,.36,1) both;
 }
-.doc-card:hover{border-color:rgba(201,168,92,.35);transform:translateY(-2px);
-  box-shadow:0 10px 36px rgba(0,0,0,.5),inset 0 0 40px rgba(201,168,92,.012);}
+.doc-card:hover{border-color:rgba(201,168,92,.4);transform:translateY(-3px);
+  box-shadow:0 14px 40px rgba(0,0,0,.55),inset 0 0 50px rgba(201,168,92,.018);}
+.doc-card:active{transform:translateY(-1px);transition-duration:.08s;}
 .doc-card.c-due {border-left:3px solid var(--sr-due);}
 .doc-card.c-over{border-left:3px solid var(--sr-over);}
-.card-bar{height:4px;display:flex;}
-.card-bar-seg{height:100%;}
+.card-bar{height:4px;display:flex;transition:filter .22s;}
+.doc-card:hover .card-bar{filter:brightness(1.18) saturate(1.1);}
+.card-bar-seg{height:100%;transition:flex .3s ease;}
 .card-body{padding:17px 18px;flex:1;}
 .card-title{font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:600;
   font-style:italic;color:var(--st);line-height:1.3;margin-bottom:4px;
@@ -288,7 +292,8 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   display:flex;align-items:center;justify-content:center;transition:all .2s;}
 .card-del:hover{color:var(--sr-over);border-color:rgba(192,90,74,.35);background:rgba(192,90,74,.07);}
 .empty-state{text-align:center;padding:72px 24px;}
-.empty-icon{margin:0 auto 24px;display:block;opacity:.18;}
+@keyframes float-y{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+.empty-icon{margin:0 auto 24px;display:block;opacity:.18;animation:float-y 6s ease-in-out infinite;}
 .empty-ttl{font-family:'Playfair Display',Georgia,serif;font-size:20px;font-style:italic;
   color:var(--sm);margin-bottom:8px;}
 .empty-sub{font-size:13px;color:var(--smm);line-height:1.65;margin-bottom:24px;}
@@ -428,7 +433,7 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
 .a4.new{animation:pg-in .42s cubic-bezier(.22,.8,.36,1) both;}
 .page-body{min-height:768px;}
 .a4:not([data-page="1"]) .page-body{min-height:888px;}
-.page-body.empty::before{content:'Click  +  to add a block.';display:block;text-align:center;
+.page-body.empty::before{content:'Click  +  or press  Alt + +  to add a block.';display:block;text-align:center;
   margin-top:52px;color:rgba(80,90,80,.28);font-style:italic;font-size:13px;
   pointer-events:none;user-select:none;}
 .doc-head{text-align:center;margin-bottom:28px;}
@@ -527,8 +532,8 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   background:linear-gradient(160deg,#162118,#080D0A);
   border:1px solid var(--sb);border-top:3px solid var(--g1);border-radius:8px;
   padding:28px 28px 22px;box-shadow:0 36px 90px rgba(0,0,0,.85);
-  transform:translateY(10px);transition:transform .25s;}
-.tag-wrap.open .tag-box{transform:translateY(0);}
+  transform:translateY(14px) scale(.97);opacity:.4;transition:transform .28s cubic-bezier(.22,.9,.34,1),opacity .28s;}
+.tag-wrap.open .tag-box{transform:none;opacity:1;}
 .tag-box-ttl{font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:600;
   font-style:italic;color:var(--st);margin-bottom:5px;}
 .tag-box-sub{font-size:11.5px;color:var(--sm);margin-bottom:20px;}
@@ -574,8 +579,8 @@ body{font-family:'Lato','Segoe UI','Helvetica Neue',Arial,sans-serif;
   background:linear-gradient(160deg,#162118,#080D0A);
   border:1px solid var(--sb);border-top:3px solid var(--g1);border-radius:8px;
   padding:28px 26px 22px;box-shadow:0 36px 90px rgba(0,0,0,.85);
-  transform:translateY(10px);transition:transform .25s;}
-.rev-wrap.open .rev-box{transform:translateY(0);}
+  transform:translateY(14px) scale(.97);opacity:.4;transition:transform .28s cubic-bezier(.22,.9,.34,1),opacity .28s;}
+.rev-wrap.open .rev-box{transform:none;opacity:1;}
 .rev-title{font-family:'Playfair Display',Georgia,serif;font-size:18px;font-style:italic;
   font-weight:600;color:var(--st);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .rev-q{font-size:11.5px;color:var(--sm);margin-bottom:14px;}
@@ -657,6 +662,24 @@ body.is-mobile .bar{width:6px;pointer-events:none;cursor:default;}      /* no ty
 body.is-mobile [contenteditable="false"][data-ph]:empty::before{content:'';}
 body.is-mobile .toast{left:16px;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));text-align:center;}
 body.is-mobile #hk-badge{display:none!important;}
+
+/* Read-only capability hints (mobile only) */
+@keyframes fade-up{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+@keyframes fade-down{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+.m-ro-note,.m-ro-bar{display:none;}
+body.is-mobile .m-ro-note{display:flex;align-items:flex-start;gap:10px;
+  margin:14px 16px 0;padding:12px 14px;border-radius:10px;
+  background:rgba(201,168,92,.06);border:1px solid rgba(201,168,92,.18);
+  font-size:12px;line-height:1.55;color:var(--sm);
+  animation:fade-up .5s cubic-bezier(.22,.8,.36,1) both;}
+.m-ro-note .ro-ico{font-size:14px;flex-shrink:0;line-height:1.5;}
+.m-ro-note strong{color:var(--g1);font-weight:700;}
+body.is-mobile .m-ro-bar{display:flex;align-items:center;justify-content:center;
+  padding:9px 14px;background:linear-gradient(160deg,#101A14,#0A120D);
+  border-bottom:1px solid var(--sb);font-size:11.5px;letter-spacing:.02em;
+  color:var(--g1);text-align:center;flex-shrink:0;
+  animation:fade-down .4s ease both;}
+body.is-mobile .empty-state .btn-new{display:none;}
 
 /* Smaller phones: 2×2 ratings, full-bleed onboarding */
 @media (max-width:520px){
@@ -773,6 +796,10 @@ body.is-mobile #hk-badge{display:none!important;}
     <span>Notes are stored in this browser only — <strong>Export Backup</strong> regularly to avoid data loss.</span>
     <button class="ls-close" id="ls-close">✕</button>
   </div>
+  <div class="m-ro-note" id="m-ro-note">
+    <span class="ro-ico">📖</span>
+    <span>You're in <strong>read-only</strong> mobile mode — browse and read your notes here. Open Ṭālib al-ʿIlm on a <strong>desktop</strong> to create, edit, reorder, tag, review, print, or back up.</span>
+  </div>
   <div class="lib-body" id="lib-body"></div>
 </div>
 
@@ -785,6 +812,7 @@ body.is-mobile #hk-badge{display:none!important;}
     <button class="btn-tags" id="btn-tags">⟐ Sciences</button>
     <button class="btn-review" id="btn-review"><span id="review-lbl">Mark as Reviewed</span></button>
   </div>
+  <div class="m-ro-bar" id="m-ro-bar">✎ Read-only — editing is available on the desktop version</div>
   <div class="edt-main">
     <aside class="sidebar">
       <div class="sb-sec">
@@ -833,6 +861,7 @@ body.is-mobile #hk-badge{display:none!important;}
         <div class="sb-ttl">Shortcuts</div>
         <div class="scts">
           <div class="sct"><span class="sct-l">New block</span>         <span class="sct-k">Enter</span></div>
+          <div class="sct"><span class="sct-l">Add block (anywhere)</span><span class="sct-k">Alt + +</span></div>
           <div class="sct"><span class="sct-l">Line break</span>        <span class="sct-k">Shift+Enter</span></div>
           <div class="sct"><span class="sct-l">Delete empty</span>      <span class="sct-k">⌫</span></div>
           <div class="sct"><span class="sct-l">Reorder</span>           <span class="sct-k">Shift+↑↓</span></div>
@@ -1131,6 +1160,7 @@ function showEditor(id){ currentDocId=id; loadDoc(id); document.getElementById('
    science > body text)
 ══════════════════════════════════ */
 let searchQuery='';
+let _cardSeq=0;
 function normSearch(s){
   return (s||'').normalize('NFD')
     .replace(/[\u0300-\u036f]/g,'')   /* strip diacritics: ā→a, ḥ→h, ī→i … */
@@ -1166,6 +1196,7 @@ libQClear.addEventListener('click',()=>{ libQ.value=''; searchQuery=''; libQClea
 libQ.addEventListener('keydown',e=>{ if(e.key==='Escape'&&libQ.value){ e.preventDefault(); libQ.value=''; searchQuery=''; libQClear.style.display='none'; renderLibrary(); } });
 
 function renderLibrary(){
+  _cardSeq=0;
   const ORD={over:0,due:1,new:2,ok:3};
   const sortFn=(a,b)=>{
     const sa=SM2.status(a.sr),sb=SM2.status(b.sr);
@@ -1266,6 +1297,7 @@ function renderLibrary(){
 function mkCard(doc){
   const status=SM2.status(doc.sr), card=document.createElement('div');
   card.className='doc-card'+(status==='due'?' c-due':status==='over'?' c-over':'');
+  card.style.animationDelay=(Math.min(_cardSeq++,20)*26)+'ms';
   const bar=document.createElement('div'); bar.className='card-bar';
   const cnt={ayah:0,hadith:0,athar:0,note:0};
   doc.blocks.forEach(b=>cnt[b.type]=(cnt[b.type]||0)+1);
@@ -1375,6 +1407,7 @@ function loadDoc(id){
 }
 function saveCurrentDoc(){
   if(!currentDocId) return;
+  if(MOBILE) return;                 /* read-only on mobile — never mutate storage */
   const doc=DB.get(currentDocId)||DB.newDoc();
   doc.id=currentDocId; doc.title=gT(dTitle); doc.author=gT(dAuthor); doc.chapter=gT(dChap);
   doc.pageType=pgType; doc.pgStart=pgStart; doc.updatedAt=Date.now(); doc.blocks=[];
@@ -1399,6 +1432,7 @@ function updateEditorBar(doc, lastQuality=null){
   else{lbl.textContent='◎ Mark as Reviewed';}
 }
 document.getElementById('edt-back').addEventListener('click',()=>{
+  if(MOBILE){ showLibrary(); return; }   /* reader: just go back */
   clearTimeout(saveTimer); saveCurrentDoc();
   const doc = DB.get(currentDocId);
   // Show tag modal if this is the first time closing (tagsAsked not set)
@@ -1564,9 +1598,24 @@ function updateTagsButton(tags){
 }
 
 /* ══════════════════════════════════
-   GLOBAL HOTKEYS  Alt+0/1/2/3
+   GLOBAL HOTKEYS
+   Alt+0/1/2/3/4 → set focused type
+   Alt + +       → add a new block
 ══════════════════════════════════ */
 document.addEventListener('keydown',e=>{ if(!e.altKey||e.ctrlKey||e.shiftKey||e.metaKey) return; if(!focused) return; const m={Digit1:'ayah',Digit2:'hadith',Digit3:'athar',Digit0:'note',Digit4:'title'}; const t=m[e.code]; if(!t) return; e.preventDefault(); applyType(focused,t); },true);
+
+/* Add-block hotkey — works even when nothing is focused (e.g. an empty page).
+   Matches the "+" key across US / German / numpad layouts and Mac Option. */
+document.addEventListener('keydown',e=>{
+  if(!e.altKey||e.ctrlKey||e.metaKey) return;
+  if(MOBILE) return;                                   /* desktop only */
+  const edt=document.getElementById('edt');
+  if(!edt||edt.classList.contains('off')) return;      /* only in the editor */
+  const isPlus = e.key==='+' || e.code==='NumpadAdd' || e.code==='Equal' || e.code==='BracketRight';
+  if(!isPlus) return;
+  e.preventDefault();
+  focusB(insertB('note','',focused));
+},true);
 
 /* ══════════════════════════════════
    LAYOUT ENGINE — flicker-free
